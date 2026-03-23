@@ -48,12 +48,14 @@ Plans:
   3. User can create Thai tax invoices with all 8 required fields per Section 86/4, with sequential document numbering, and manage contacts with Tax ID and branch storage
   4. User can view a Thai tax calendar showing all filing deadlines (adjusted for public holidays) with visual dashboard alerts and per-form filing status tracking
   5. AI auto-suggests WHT rate based on payment/service type when scanning receipts
-**Plans**: TBD
+**Plans**: 5 plans
 
 Plans:
-- [ ] 02-01: TBD
-- [ ] 02-02: TBD
-- [ ] 02-03: TBD
+- [ ] 02-01-PLAN.md -- Schema foundation, WHT calculator, contact model, filing deadline services
+- [ ] 02-02-PLAN.md -- AI WHT rate suggestion and transaction WHT field integration
+- [ ] 02-03-PLAN.md -- 50 Tawi certificate, PND3/PND53 report generation, batch download
+- [ ] 02-04-PLAN.md -- Tax invoice creation with Section 86/4 enforcement, contact management
+- [ ] 02-05-PLAN.md -- Filing deadline dashboard alerts, status tracking, WHT summary widget
 
 ### Phase 3: CIT + Tax Intelligence + Dashboard
 **Goal**: A Thai SME owner can estimate corporate income tax, get intelligent flags on non-deductible expenses, and see a unified tax summary dashboard
@@ -90,7 +92,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Thai Foundation + VAT Compliance | 0/5 | Planned | - |
-| 2. WHT + Tax Invoices + Filing Deadlines | 0/3 | Not started | - |
+| 1. Thai Foundation + VAT Compliance | 5/5 | Complete | 2026-03-23 |
+| 2. WHT + Tax Invoices + Filing Deadlines | 0/5 | Planned | - |
 | 3. CIT + Tax Intelligence + Dashboard | 0/2 | Not started | - |
 | 4. Export + Interoperability | 0/1 | Not started | - |
