@@ -8,14 +8,21 @@ import { FormSelectCategory } from "@/components/forms/select-category"
 import { FormSelectCurrency } from "@/components/forms/select-currency"
 import { FormSelectProject } from "@/components/forms/select-project"
 import { FormSelectType } from "@/components/forms/select-type"
-import { FormInput, FormTextarea } from "@/components/forms/simple"
+import { FormInput, FormSelect, FormTextarea } from "@/components/forms/simple"
 import { Button } from "@/components/ui/button"
 import { TransactionData } from "@/models/transactions"
+import { extractVATFromTotal, VAT_RATE } from "@/services/tax-calculator"
 import { Category, Currency, Field, Project, Transaction } from "@/prisma/client"
 import { format } from "date-fns"
 import { Loader2, Save, Trash2 } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { startTransition, useActionState, useEffect, useMemo, useState } from "react"
+
+const VAT_TYPE_OPTIONS = [
+  { code: "input", name: "ภาษีซื้อ" },
+  { code: "output", name: "ภาษีขาย" },
+  { code: "none", name: "ไม่มี VAT" },
+]
 
 export default function TransactionEditForm({
   transaction,
@@ -51,6 +58,14 @@ export default function TransactionEditForm({
     issuedAt: transaction.issuedAt ? format(transaction.issuedAt, "yyyy-MM-dd") : "",
     note: transaction.note || "",
     items: transaction.items || [],
+    // VAT fields
+    vatType: transaction.vatType || "none",
+    vatAmount: transaction.vatAmount || 0,
+    vatRate: transaction.vatRate || VAT_RATE,
+    subtotal: transaction.subtotal || 0,
+    merchantTaxId: transaction.merchantTaxId || "",
+    merchantBranch: transaction.merchantBranch || "",
+    documentNumber: transaction.documentNumber || "",
     ...extraFields.reduce(
       (acc, field) => {
         acc[field.code] = transaction.extra?.[field.code as keyof typeof transaction.extra] || ""
@@ -59,6 +74,49 @@ export default function TransactionEditForm({
       {} as Record<string, any>
     ),
   })
+
+  // Auto-compute VAT when total changes
+  const handleTotalChange = (newTotal: number) => {
+    const totalInSatang = Math.round(newTotal * 100)
+    if (formData.vatType && formData.vatType !== "none" && totalInSatang > 0) {
+      const result = extractVATFromTotal(totalInSatang)
+      setFormData((prev) => ({
+        ...prev,
+        total: newTotal,
+        subtotal: result.subtotal,
+        vatAmount: result.vatAmount,
+      }))
+    } else {
+      setFormData((prev) => ({ ...prev, total: newTotal }))
+    }
+  }
+
+  const handleVatTypeChange = (newVatType: string) => {
+    if (newVatType === "none") {
+      setFormData((prev) => ({
+        ...prev,
+        vatType: newVatType,
+        vatAmount: 0,
+        subtotal: 0,
+        merchantTaxId: "",
+        merchantBranch: "",
+        documentNumber: "",
+      }))
+    } else {
+      const totalInSatang = Math.round(formData.total * 100)
+      if (totalInSatang > 0) {
+        const result = extractVATFromTotal(totalInSatang)
+        setFormData((prev) => ({
+          ...prev,
+          vatType: newVatType,
+          subtotal: result.subtotal,
+          vatAmount: result.vatAmount,
+        }))
+      } else {
+        setFormData((prev) => ({ ...prev, vatType: newVatType }))
+      }
+    }
+  }
 
   const fieldMap = useMemo(() => {
     return fields.reduce(
@@ -192,6 +250,66 @@ export default function TransactionEditForm({
           defaultValue={formData.projectCode}
           isRequired={fieldMap.projectCode.isRequired}
         />
+      </div>
+
+      {/* VAT Fields Section */}
+      <div className="border-t pt-4 mt-4">
+        <h3 className="text-sm font-bold mb-3">ข้อมูลภาษีมูลค่าเพิ่ม (VAT)</h3>
+        <div className="space-y-3">
+          <FormSelect
+            title="ประเภท VAT"
+            name="vatType"
+            defaultValue={formData.vatType}
+            onValueChange={(val) => handleVatTypeChange(val)}
+            items={VAT_TYPE_OPTIONS}
+          />
+
+          {formData.vatType !== "none" && (
+            <>
+              <div className="flex flex-row gap-4">
+                <FormInput
+                  title="มูลค่าสินค้า/บริการ (สตางค์)"
+                  type="number"
+                  name="subtotal"
+                  defaultValue={String(formData.subtotal)}
+                  className="w-40"
+                />
+                <FormInput
+                  title="จำนวนภาษี (สตางค์)"
+                  type="number"
+                  name="vatAmount"
+                  defaultValue={String(formData.vatAmount)}
+                  className="w-40"
+                />
+                <input type="hidden" name="vatRate" value={String(formData.vatRate)} />
+              </div>
+
+              <div className="flex flex-row gap-4">
+                <FormInput
+                  title="เลขประจำตัวผู้เสียภาษี"
+                  type="text"
+                  name="merchantTaxId"
+                  defaultValue={formData.merchantTaxId}
+                  className="w-48"
+                />
+                <FormInput
+                  title="สาขา"
+                  type="text"
+                  name="merchantBranch"
+                  defaultValue={formData.merchantBranch}
+                  className="w-32"
+                />
+                <FormInput
+                  title="เลขที่เอกสาร"
+                  type="text"
+                  name="documentNumber"
+                  defaultValue={formData.documentNumber}
+                  className="w-40"
+                />
+              </div>
+            </>
+          )}
+        </div>
       </div>
 
       <FormTextarea

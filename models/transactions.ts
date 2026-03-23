@@ -196,6 +196,18 @@ export const bulkDeleteTransactions = async (ids: string[], userId: string) => {
   })
 }
 
+// First-class Transaction columns that are NOT in the Field model
+// but must pass through splitTransactionDataExtraFields into standard
+const FIRST_CLASS_COLUMNS = new Set([
+  "vatType",
+  "vatAmount",
+  "vatRate",
+  "subtotal",
+  "merchantTaxId",
+  "merchantBranch",
+  "documentNumber",
+])
+
 const splitTransactionDataExtraFields = async (
   data: TransactionData,
   userId: string
@@ -213,6 +225,12 @@ const splitTransactionDataExtraFields = async (
   const extra: Record<string, unknown> = {}
 
   Object.entries(data).forEach(([key, value]) => {
+    // First-class columns always go to standard
+    if (FIRST_CLASS_COLUMNS.has(key)) {
+      standard[key] = value
+      return
+    }
+
     const fieldDef = fieldMap[key]
     if (fieldDef) {
       if (fieldDef.isExtra) {

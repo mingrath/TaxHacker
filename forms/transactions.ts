@@ -58,5 +58,41 @@ export const transactionFormSchema = z
           throw new z.ZodError([{ message: "Invalid items JSON", path: ["items"], code: z.ZodIssueCode.custom }])
         }
       }),
+    // VAT fields (all optional for backward compatibility with existing transactions)
+    vatType: z.enum(["input", "output", "none"]).optional().nullable().or(z.literal("")),
+    vatAmount: z
+      .string()
+      .optional()
+      .transform((val) => {
+        if (!val || val.trim() === "") return null
+        const num = parseInt(val, 10)
+        return isNaN(num) ? null : num
+      }),
+    vatRate: z
+      .string()
+      .optional()
+      .transform((val) => {
+        if (!val || val.trim() === "") return null
+        const num = parseInt(val, 10)
+        return isNaN(num) ? null : num
+      }),
+    subtotal: z
+      .string()
+      .optional()
+      .transform((val) => {
+        if (!val || val.trim() === "") return null
+        const num = parseInt(val, 10)
+        return isNaN(num) ? null : num
+      }),
+    merchantTaxId: z
+      .string()
+      .optional()
+      .nullable()
+      .transform((val) => {
+        if (!val || val.trim() === "") return null
+        return val.trim()
+      }),
+    merchantBranch: z.string().optional().nullable().transform((val) => val || null),
+    documentNumber: z.string().optional().nullable().transform((val) => val || null),
   })
   .catchall(z.string())
