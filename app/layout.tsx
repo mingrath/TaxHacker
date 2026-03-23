@@ -1,10 +1,18 @@
 import config from "@/lib/config"
 import type { Metadata, Viewport } from "next"
+import { Noto_Sans_Thai } from "next/font/google"
 import "./globals.css"
+
+const notoSansThai = Noto_Sans_Thai({
+  subsets: ["thai", "latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-noto-sans-thai",
+  display: "swap",
+})
 
 export const metadata: Metadata = {
   title: {
-    template: "%s | TaxHacker",
+    template: "%s | BanChee",
     default: config.app.title,
   },
   description: config.app.description,
@@ -17,7 +25,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(config.app.baseURL),
   openGraph: {
     type: "website",
-    locale: "en_US",
+    locale: "th_TH",
     url: config.app.baseURL,
     title: config.app.title,
     description: config.app.description,
@@ -44,7 +52,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="th" className={notoSansThai.variable}>
       <body className="min-h-screen bg-white antialiased">{children}</body>
     </html>
   )

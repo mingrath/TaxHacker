@@ -3,7 +3,7 @@ import slugify from "slugify"
 import { twMerge } from "tailwind-merge"
 import { violet, tomato, red, crimson, pink, plum, purple, indigo, blue, sky, cyan, teal, mint, grass, lime, yellow, amber, orange, brown } from "@radix-ui/colors"
 
-const LOCALE = "en-US"
+const LOCALE = "th-TH"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))

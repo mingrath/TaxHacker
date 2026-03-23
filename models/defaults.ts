@@ -1,6 +1,10 @@
 import { prisma } from "@/lib/db"
 
-export const DEFAULT_PROMPT_ANALYSE_NEW_FILE = `You are an accountant and invoice analysis assistant. Extract following information from the given invoice: 
+export const DEFAULT_PROMPT_ANALYSE_NEW_FILE = `You are a Thai tax and accounting assistant. Extract the following information from the given invoice or receipt.
+
+If the document is in Thai, extract Thai text as-is. If year is in Buddhist Era (พ.ศ., value > 2500), convert to Gregorian by subtracting 543.
+
+For tax invoices (ใบกำกับภาษี), also extract: merchant_tax_id (13-digit Tax ID), merchant_branch (สำนักงานใหญ่=00000 or branch number), document_number (invoice serial), vat_amount (VAT amount separated from base value), vat_type (input if expense/purchase, output if income/sales).
 
 {fields}
 
@@ -17,14 +21,16 @@ And projects are:
 IMPORTANT RULES:
 - Do not include any other text in your response!
 - If you can't find something leave it blank, NEVER make up information
-- Return only one object`
+- Return only one object
+- Dates must be in YYYY-MM-DD Gregorian format (convert from Buddhist Era if needed)
+- Amounts must be in the smallest currency unit (satang for THB, cents for USD)`
 
 export const DEFAULT_SETTINGS = [
   {
     code: "default_currency",
-    name: "Default Currency",
-    description: "Don't change this setting if you already have multi-currency transactions. I won't recalculate them.",
-    value: "EUR",
+    name: "สกุลเงินหลัก",
+    description: "อย่าเปลี่ยนหากมีรายการหลายสกุลเงินอยู่แล้ว ระบบจะไม่คำนวณใหม่",
+    value: "THB",
   },
   {
     code: "default_category",
@@ -59,46 +65,26 @@ export const DEFAULT_SETTINGS = [
 ]
 
 export const DEFAULT_CATEGORIES = [
-  {
-    code: "ads",
-    name: "Advertisement",
-    color: "#882727",
-    llm_prompt: "ads, promos, online ads, etc",
-  },
-  {
-    code: "swag",
-    name: "Swag and Goods",
-    color: "#882727",
-    llm_prompt: "swag, stickers, goods, etc",
-  },
-  { code: "donations", name: "Gifts and Donations", color: "#1e6359", llm_prompt: "donations, gifts, charity" },
-  { code: "tools", name: "Equipment and Tools", color: "#c69713", llm_prompt: "equipment, tools" },
-  { code: "events", name: "Events and Conferences", color: "#ff8b32", llm_prompt: "events, conferences" },
-  { code: "food", name: "Food and Drinks", color: "#d40e70", llm_prompt: "food, drinks, business meals" },
-  { code: "insurance", name: "Insurance", color: "#050942", llm_prompt: "insurance, health, life" },
-  { code: "invoice", name: "Invoice", color: "#064e85", llm_prompt: "custom invoice, bill" },
-  { code: "communication", name: "Mobile and Internet", color: "#0e7d86", llm_prompt: "mobile, internet, phone" },
-  { code: "office", name: "Office Supplies", color: "#59b0b9", llm_prompt: "office, supplies, stationery" },
-  { code: "online", name: "Online Services", color: "#8753fb", llm_prompt: "online services, saas, subscriptions" },
-  { code: "rental", name: "Rental", color: "#050942", llm_prompt: "rental, lease" },
-  {
-    code: "education",
-    name: "Education",
-    color: "#ee5d6c",
-    llm_prompt: "education, professional development, trainings",
-  },
-  { code: "salary", name: "Salary", color: "#ce4993", llm_prompt: "salary, wages, etc" },
-  { code: "fees", name: "Fees", color: "#6a0d83", llm_prompt: "fees, charges, penalties, etc" },
-  { code: "travel", name: "Travel Expenses", color: "#fb9062", llm_prompt: "travel, accommodation, etc" },
-  { code: "utility_bills", name: "Utility Bills", color: "#af7e2e", llm_prompt: "bills, electricity, water, etc" },
-  {
-    code: "transport",
-    name: "Transport",
-    color: "#800000",
-    llm_prompt: "transportation costs, fuel, car rental, vignettes, etc",
-  },
-  { code: "software", name: "Software", color: "#2b5a1d", llm_prompt: "software, licenses" },
-  { code: "other", name: "Other", color: "#121216", llm_prompt: "other, miscellaneous," },
+  { code: "ads", name: "โฆษณา", color: "#882727", llm_prompt: "โฆษณา, โปรโมชัน, online ads, advertising" },
+  { code: "swag", name: "สินค้าส่งเสริม", color: "#882727", llm_prompt: "ของพรีเมียม, สติกเกอร์, สินค้าส่งเสริมการขาย" },
+  { code: "donations", name: "บริจาค", color: "#1e6359", llm_prompt: "บริจาค, ของขวัญ, การกุศล, donations" },
+  { code: "tools", name: "อุปกรณ์", color: "#c69713", llm_prompt: "อุปกรณ์, เครื่องมือ, equipment, tools" },
+  { code: "events", name: "งานอีเว้นท์", color: "#ff8b32", llm_prompt: "งานอีเว้นท์, สัมมนา, ประชุม, events" },
+  { code: "food", name: "อาหารและเครื่องดื่ม", color: "#d40e70", llm_prompt: "อาหาร, เครื่องดื่ม, มื้อธุรกิจ, food" },
+  { code: "insurance", name: "ประกันภัย", color: "#050942", llm_prompt: "ประกัน, insurance" },
+  { code: "invoice", name: "ใบแจ้งหนี้", color: "#064e85", llm_prompt: "ใบแจ้งหนี้, ใบเรียกเก็บเงิน, invoice, bill" },
+  { code: "communication", name: "สื่อสาร", color: "#0e7d86", llm_prompt: "มือถือ, อินเทอร์เน็ต, โทรศัพท์, mobile, internet" },
+  { code: "office", name: "วัสดุสำนักงาน", color: "#59b0b9", llm_prompt: "วัสดุสำนักงาน, เครื่องเขียน, office supplies" },
+  { code: "online", name: "บริการออนไลน์", color: "#8753fb", llm_prompt: "บริการออนไลน์, SaaS, subscription" },
+  { code: "rental", name: "ค่าเช่า", color: "#050942", llm_prompt: "ค่าเช่า, เช่า, rental, lease" },
+  { code: "education", name: "การศึกษา", color: "#ee5d6c", llm_prompt: "การศึกษา, อบรม, education, training" },
+  { code: "salary", name: "เงินเดือน", color: "#ce4993", llm_prompt: "เงินเดือน, ค่าจ้าง, salary, wages" },
+  { code: "fees", name: "ค่าธรรมเนียม", color: "#6a0d83", llm_prompt: "ค่าธรรมเนียม, ค่าปรับ, fees, charges" },
+  { code: "travel", name: "ค่าเดินทาง", color: "#fb9062", llm_prompt: "ค่าเดินทาง, ที่พัก, travel" },
+  { code: "utility_bills", name: "ค่าสาธารณูปโภค", color: "#af7e2e", llm_prompt: "ค่าน้ำ, ค่าไฟ, utility bills" },
+  { code: "transport", name: "ขนส่ง", color: "#800000", llm_prompt: "ค่าขนส่ง, น้ำมัน, ค่ารถ, transport, fuel" },
+  { code: "software", name: "ซอฟต์แวร์", color: "#2b5a1d", llm_prompt: "ซอฟต์แวร์, ลิขสิทธิ์, software, license" },
+  { code: "other", name: "อื่นๆ", color: "#121216", llm_prompt: "อื่นๆ, เบ็ดเตล็ด, other, miscellaneous" },
 ]
 
 export const DEFAULT_PROJECTS = [{ code: "personal", name: "Personal", llm_prompt: "personal", color: "#1e202b" }]
@@ -286,7 +272,7 @@ export const DEFAULT_CURRENCIES = [
 export const DEFAULT_FIELDS = [
   {
     code: "name",
-    name: "Name",
+    name: "ชื่อรายการ",
     type: "string",
     llm_prompt: "human readable name, summarize what is bought or paid for in the invoice",
     isVisibleInList: true,
@@ -296,7 +282,7 @@ export const DEFAULT_FIELDS = [
   },
   {
     code: "description",
-    name: "Description",
+    name: "รายละเอียด",
     type: "string",
     llm_prompt: "description of the transaction",
     isVisibleInList: false,
@@ -306,7 +292,7 @@ export const DEFAULT_FIELDS = [
   },
   {
     code: "merchant",
-    name: "Merchant",
+    name: "ผู้ขาย/ร้านค้า",
     type: "string",
     llm_prompt: "merchant name, use the original spelling and language",
     isVisibleInList: true,
@@ -316,9 +302,9 @@ export const DEFAULT_FIELDS = [
   },
   {
     code: "issuedAt",
-    name: "Issued At",
+    name: "วันที่ออก",
     type: "string",
-    llm_prompt: "issued at date (YYYY-MM-DD format)",
+    llm_prompt: "issued at date (YYYY-MM-DD format). If year is in Buddhist Era (พ.ศ., value > 2500), convert to Gregorian by subtracting 543",
     isVisibleInList: true,
     isVisibleInAnalysis: true,
     isRequired: true,
@@ -326,7 +312,7 @@ export const DEFAULT_FIELDS = [
   },
   {
     code: "projectCode",
-    name: "Project",
+    name: "โปรเจกต์",
     type: "string",
     llm_prompt: "project code, one of: {projects.code}",
     isVisibleInList: true,
@@ -336,7 +322,7 @@ export const DEFAULT_FIELDS = [
   },
   {
     code: "categoryCode",
-    name: "Category",
+    name: "หมวดหมู่",
     type: "string",
     llm_prompt: "category code, one of: {categories.code}",
     isVisibleInList: true,
@@ -346,7 +332,7 @@ export const DEFAULT_FIELDS = [
   },
   {
     code: "files",
-    name: "Files",
+    name: "ไฟล์",
     type: "string",
     llm_prompt: "",
     isVisibleInList: true,
@@ -356,9 +342,9 @@ export const DEFAULT_FIELDS = [
   },
   {
     code: "total",
-    name: "Total",
+    name: "ยอดรวม",
     type: "number",
-    llm_prompt: "total total of the transaction",
+    llm_prompt: "total amount of the transaction in the smallest currency unit (satang for THB)",
     isVisibleInList: true,
     isVisibleInAnalysis: true,
     isRequired: true,
@@ -366,9 +352,9 @@ export const DEFAULT_FIELDS = [
   },
   {
     code: "currencyCode",
-    name: "Currency",
+    name: "สกุลเงิน",
     type: "string",
-    llm_prompt: "currency code, ISO 4217 three letter code like USD, EUR, including crypto codes like BTC, ETH, etc",
+    llm_prompt: "currency code, ISO 4217 three letter code like USD, EUR, THB, including crypto codes like BTC, ETH, etc",
     isVisibleInList: false,
     isVisibleInAnalysis: true,
     isRequired: false,
@@ -376,7 +362,7 @@ export const DEFAULT_FIELDS = [
   },
   {
     code: "convertedTotal",
-    name: "Converted Total",
+    name: "ยอดแปลงสกุล",
     type: "number",
     llm_prompt: "",
     isVisibleInList: false,
@@ -386,7 +372,7 @@ export const DEFAULT_FIELDS = [
   },
   {
     code: "convertedCurrencyCode",
-    name: "Converted Currency Code",
+    name: "สกุลเงินที่แปลง",
     type: "string",
     llm_prompt: "",
     isVisibleInList: false,
@@ -396,7 +382,7 @@ export const DEFAULT_FIELDS = [
   },
   {
     code: "type",
-    name: "Type",
+    name: "ประเภท",
     type: "string",
     llm_prompt: "",
     isVisibleInList: false,
@@ -406,7 +392,7 @@ export const DEFAULT_FIELDS = [
   },
   {
     code: "note",
-    name: "Note",
+    name: "หมายเหตุ",
     type: "string",
     llm_prompt: "",
     isVisibleInList: false,
@@ -415,28 +401,38 @@ export const DEFAULT_FIELDS = [
     isExtra: false,
   },
   {
-    code: "vat_rate",
-    name: "VAT Rate",
-    type: "number",
-    llm_prompt: "VAT rate in percentage 0-100",
+    code: "merchant_tax_id",
+    name: "เลขประจำตัวผู้เสียภาษี",
+    type: "string",
+    llm_prompt: "เลขประจำตัวผู้เสียภาษีอากร (13 หลัก) ของผู้ขาย -- Thai Tax ID, always 13 digits",
     isVisibleInList: false,
-    isVisibleInAnalysis: false,
+    isVisibleInAnalysis: true,
     isRequired: false,
-    isExtra: true,
+    isExtra: false,
   },
   {
-    code: "vat",
-    name: "VAT Amount",
-    type: "number",
-    llm_prompt: "total VAT in currency of the invoice",
+    code: "merchant_branch",
+    name: "สาขา",
+    type: "string",
+    llm_prompt: "สำนักงานใหญ่ = '00000', otherwise branch number e.g. '00001'",
     isVisibleInList: false,
-    isVisibleInAnalysis: false,
+    isVisibleInAnalysis: true,
     isRequired: false,
-    isExtra: true,
+    isExtra: false,
+  },
+  {
+    code: "document_number",
+    name: "เลขที่เอกสาร",
+    type: "string",
+    llm_prompt: "เลขที่ใบกำกับภาษี or invoice/receipt number",
+    isVisibleInList: false,
+    isVisibleInAnalysis: true,
+    isRequired: false,
+    isExtra: false,
   },
   {
     code: "text",
-    name: "Extracted Text",
+    name: "ข้อความที่สกัดได้",
     type: "string",
     llm_prompt: "extract all recognised text from the invoice",
     isVisibleInList: false,

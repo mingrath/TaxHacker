@@ -81,6 +81,7 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-noto-sans-thai), sans-serif;
   }
   input::-webkit-outer-spin-button,
   input::-webkit-inner-spin-button {
