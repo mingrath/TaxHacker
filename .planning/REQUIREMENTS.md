@@ -36,9 +36,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [x] **WHT-01**: WHT rate selection per payment type (1% transport, 2% advertising, 3% services/professional, 5% rent)
 - [x] **WHT-02**: Auto-calculate WHT on pre-VAT amount (not total — critical correctness requirement)
-- [ ] **WHT-03**: Generate WHT certificate (50 Tawi / หนังสือรับรองหัก ณ ที่จ่าย) as PDF with all 11 required fields
-- [ ] **WHT-04**: Generate PND3 (ภ.ง.ด.3) monthly WHT report for payments to individuals
-- [ ] **WHT-05**: Generate PND53 (ภ.ง.ด.53) monthly WHT report for payments to companies
+- [x] **WHT-03**: Generate WHT certificate (50 Tawi / หนังสือรับรองหัก ณ ที่จ่าย) as PDF with all 11 required fields
+- [x] **WHT-04**: Generate PND3 (ภ.ง.ด.3) monthly WHT report for payments to individuals
+- [x] **WHT-05**: Generate PND53 (ภ.ง.ด.53) monthly WHT report for payments to companies
 
 ### Corporate Income Tax (CIT)
 
@@ -130,9 +130,9 @@ Deferred to future release. Tracked but not in current roadmap.
 | VAT-07 | Phase 1 | Complete |
 | WHT-01 | Phase 2 | Complete |
 | WHT-02 | Phase 2 | Complete |
-| WHT-03 | Phase 2 | Pending |
-| WHT-04 | Phase 2 | Pending |
-| WHT-05 | Phase 2 | Pending |
+| WHT-03 | Phase 2 | Complete |
+| WHT-04 | Phase 2 | Complete |
+| WHT-05 | Phase 2 | Complete |
 | CIT-01 | Phase 3 | Pending |
 | CIT-02 | Phase 3 | Pending |
 | CIT-03 | Phase 3 | Pending |
