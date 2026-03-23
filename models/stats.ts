@@ -4,6 +4,8 @@ import { Prisma } from "@/prisma/client"
 import { differenceInDays, subMonths } from "date-fns"
 import { cache } from "react"
 import { TransactionFilters } from "./transactions"
+import { getDeadlinesForMonth, type FilingDeadline } from "@/services/filing-deadlines"
+import { getFilingStatusesForMonth } from "@/models/filing-status"
 
 export type DashboardStats = {
   totalIncomePerCurrency: Record<string, number>
@@ -427,5 +429,96 @@ export const getRevenueYTD = cache(
     })
 
     return result._sum.total || 0
+  }
+)
+
+// --- WHT Stats ---
+
+export type WHTSummary = {
+  totalWithheld: number // satang -- sum of whtAmount for the month
+  pnd3Withheld: number // satang -- sum for pnd3 type
+  pnd53Withheld: number // satang -- sum for pnd53 type
+  pnd3Count: number
+  pnd53Count: number
+}
+
+export const getWHTSummary = cache(
+  async (userId: string, month: number, year: number): Promise<WHTSummary> => {
+    const startDate = new Date(year, month - 1, 1)
+    const endDate = new Date(year, month, 1) // first day of next month
+
+    const [pnd3Result, pnd53Result] = await Promise.all([
+      prisma.transaction.aggregate({
+        where: {
+          userId,
+          whtType: "pnd3",
+          whtAmount: { gt: 0 },
+          issuedAt: { gte: startDate, lt: endDate },
+        },
+        _sum: { whtAmount: true },
+        _count: true,
+      }),
+      prisma.transaction.aggregate({
+        where: {
+          userId,
+          whtType: "pnd53",
+          whtAmount: { gt: 0 },
+          issuedAt: { gte: startDate, lt: endDate },
+        },
+        _sum: { whtAmount: true },
+        _count: true,
+      }),
+    ])
+
+    const pnd3Withheld = pnd3Result._sum.whtAmount || 0
+    const pnd53Withheld = pnd53Result._sum.whtAmount || 0
+
+    return {
+      totalWithheld: pnd3Withheld + pnd53Withheld,
+      pnd3Withheld,
+      pnd53Withheld,
+      pnd3Count: pnd3Result._count,
+      pnd53Count: pnd53Result._count,
+    }
+  }
+)
+
+// --- Filing Deadline with Status ---
+
+export type DeadlineWithStatus = {
+  deadline: FilingDeadline
+  status: "pending" | "filed" | "overdue"
+  filedAt: Date | null
+}
+
+export const getUpcomingDeadlines = cache(
+  async (userId: string): Promise<DeadlineWithStatus[]> => {
+    const now = new Date()
+    const currentMonth = now.getMonth() + 1
+    const currentYear = now.getFullYear()
+
+    // Filing deadlines are for the PREVIOUS month's tax period
+    // e.g., in March 2026, you file for February 2026 tax period
+    const prevMonth = currentMonth === 1 ? 12 : currentMonth - 1
+    const prevYear = currentMonth === 1 ? currentYear - 1 : currentYear
+    const deadlines = getDeadlinesForMonth(prevMonth, prevYear)
+
+    // Get filing statuses for these deadlines
+    const statuses = await getFilingStatusesForMonth(userId, prevMonth, prevYear)
+    const statusMap = new Map(
+      statuses.map((s) => [`${s.formType}-${s.taxMonth}-${s.taxYear}`, s])
+    )
+
+    return deadlines.map((d) => {
+      const key = `${d.formType}-${d.taxMonth}-${d.taxYear}`
+      const filingStatus = statusMap.get(key)
+      let status: "pending" | "filed" | "overdue" = "pending"
+      if (filingStatus?.status === "filed") {
+        status = "filed"
+      } else if (d.adjustedDeadline < now) {
+        status = "overdue"
+      }
+      return { deadline: d, status, filedAt: filingStatus?.filedAt ?? null }
+    })
   }
 )
