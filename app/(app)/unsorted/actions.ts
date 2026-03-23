@@ -4,6 +4,7 @@ import { AnalysisResult, analyzeTransaction } from "@/ai/analyze"
 import { AnalyzeAttachment, loadAttachmentsForAI } from "@/ai/attachments"
 import { buildLLMPrompt } from "@/ai/prompt"
 import { fieldsToJsonSchema } from "@/ai/schema"
+import { correctBuddhistEraDate, validateTaxInvoiceFields } from "@/ai/validators/tax-invoice-validator"
 import { transactionFormSchema } from "@/forms/transactions"
 import { ActionState } from "@/lib/actions"
 import { getCurrentUser, isAiBalanceExhausted, isSubscriptionExpired } from "@/lib/auth"
@@ -18,6 +19,7 @@ import { DEFAULT_PROMPT_ANALYSE_NEW_FILE } from "@/models/defaults"
 import { createFile, deleteFile, getFileById, updateFile } from "@/models/files"
 import { createTransaction, TransactionData, updateTransactionFiles } from "@/models/transactions"
 import { updateUser } from "@/models/users"
+import { extractVATFromTotal } from "@/services/tax-calculator"
 import { Category, Field, File, Project, Transaction } from "@/prisma/client"
 import { randomUUID } from "crypto"
 import { mkdir, readFile, rename, writeFile } from "fs/promises"
@@ -76,6 +78,20 @@ export async function analyzeFileAction(
     await updateUser(user.id, { aiBalance: { decrement: 1 } })
   }
 
+  // Post-extraction: correct B.E. dates and validate tax invoice fields
+  if (results.success && results.data?.output) {
+    const output = results.data.output
+
+    // Correct Buddhist Era dates
+    if (output.issuedAt) {
+      output.issuedAt = correctBuddhistEraDate(output.issuedAt)
+    }
+
+    // Validate against Section 86/4 requirements
+    const validation = validateTaxInvoiceFields(output as Record<string, unknown>)
+    ;(output as Record<string, unknown>)._validation = validation
+  }
+
   return results
 }
 
@@ -96,8 +112,51 @@ export async function saveFileAsTransactionAction(
     const file = await getFileById(fileId, user.id)
     if (!file) throw new Error("File not found")
 
+    // Map Thai tax fields to first-class Prisma columns
+    const transactionData: TransactionData = { ...validatedForm.data }
+
+    // Extract VAT-specific fields from form data
+    const merchantTaxId = formData.get("merchantTaxId") as string | null
+    const merchantBranch = formData.get("merchantBranch") as string | null
+    const documentNumber = formData.get("documentNumber") as string | null
+    const vatType = formData.get("vatType") as string | null
+    const vatAmountStr = formData.get("vatAmount") as string | null
+    const subtotalStr = formData.get("subtotal") as string | null
+
+    if (merchantTaxId) transactionData.merchantTaxId = merchantTaxId
+    if (merchantBranch) transactionData.merchantBranch = merchantBranch
+    if (documentNumber) transactionData.documentNumber = documentNumber
+    if (vatType && vatType !== "none") transactionData.vatType = vatType
+
+    // Convert vatAmount and subtotal to satang integers
+    if (vatAmountStr && vatAmountStr.trim() !== "") {
+      const vatAmountNum = parseFloat(vatAmountStr)
+      if (!isNaN(vatAmountNum)) {
+        transactionData.vatAmount = Math.round(vatAmountNum * 100)
+      }
+    }
+
+    if (subtotalStr && subtotalStr.trim() !== "") {
+      const subtotalNum = parseFloat(subtotalStr)
+      if (!isNaN(subtotalNum)) {
+        transactionData.subtotal = Math.round(subtotalNum * 100)
+      }
+    }
+
+    // If we have a total and vatType but no explicit subtotal/vatAmount, auto-compute
+    if (transactionData.total && transactionData.vatType && !transactionData.subtotal) {
+      const vatResult = extractVATFromTotal(transactionData.total)
+      transactionData.subtotal = vatResult.subtotal
+      transactionData.vatAmount = vatResult.vatAmount
+    }
+
+    // Set default VAT rate (700 = 7%)
+    if (transactionData.vatType) {
+      transactionData.vatRate = 700
+    }
+
     // Create transaction
-    const transaction = await createTransaction(user.id, validatedForm.data)
+    const transaction = await createTransaction(user.id, transactionData)
 
     // Move file to processed location
     const userUploadsDirectory = getUserUploadsDirectory(user)

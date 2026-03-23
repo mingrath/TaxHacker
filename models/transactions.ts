@@ -21,6 +21,13 @@ export type TransactionData = {
   projectCode?: string | null
   issuedAt?: Date | string | null
   text?: string | null
+  vatType?: string | null
+  vatAmount?: number | null
+  vatRate?: number | null
+  subtotal?: number | null
+  merchantTaxId?: string | null
+  merchantBranch?: string | null
+  documentNumber?: string | null
   [key: string]: unknown
 }
 

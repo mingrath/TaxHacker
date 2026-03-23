@@ -1,13 +1,42 @@
 import { Field } from "@/prisma/client"
 
+type JsonSchemaProperty = {
+  type: string
+  description: string
+  pattern?: string
+  enum?: string[]
+}
+
+/**
+ * Map a Field.type to JSON Schema property.
+ * Handles Thai tax-specific types: taxid, branch, vat_type.
+ */
+function fieldTypeToJsonSchema(field: Field): JsonSchemaProperty {
+  const base: JsonSchemaProperty = {
+    type: field.type,
+    description: field.llm_prompt || "",
+  }
+
+  switch (field.type) {
+    case "taxid":
+      return { ...base, type: "string", pattern: "^\\d{13}$" }
+    case "branch":
+      return { ...base, type: "string" }
+    case "vat_type":
+      return { ...base, type: "string", enum: ["input", "output", "none"] }
+    default:
+      return base
+  }
+}
+
 export const fieldsToJsonSchema = (fields: Field[]) => {
   const fieldsWithPrompt = fields.filter((field) => field.llm_prompt)
   const schemaProperties = fieldsWithPrompt.reduce(
     (acc, field) => {
-      acc[field.code] = { type: field.type, description: field.llm_prompt || "" }
+      acc[field.code] = fieldTypeToJsonSchema(field)
       return acc
     },
-    {} as Record<string, { type: string; description: string }>
+    {} as Record<string, JsonSchemaProperty>
   )
 
   const schema = {
