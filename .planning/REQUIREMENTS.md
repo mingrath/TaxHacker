@@ -62,8 +62,8 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Reports & Export (RPT)
 
-- [ ] **RPT-01**: Monthly tax summary dashboard (VAT payable, WHT withheld, upcoming deadlines)
-- [ ] **RPT-02**: Income/expense summary with profit calculation
+- [x] **RPT-01**: Monthly tax summary dashboard (VAT payable, WHT withheld, upcoming deadlines)
+- [x] **RPT-02**: Income/expense summary with profit calculation
 - [ ] **RPT-03**: Excel export in standard Thai accountant format
 - [ ] **RPT-04**: Revenue Department-compatible export format for PP30, PND3, PND53
 - [ ] **RPT-05**: FlowAccount-compatible CSV export
@@ -144,8 +144,8 @@ Deferred to future release. Tracked but not in current roadmap.
 | FILE-02 | Phase 2 | Complete |
 | FILE-03 | Phase 2 | Complete |
 | FILE-04 | Phase 2 | Complete |
-| RPT-01 | Phase 3 | Pending |
-| RPT-02 | Phase 3 | Pending |
+| RPT-01 | Phase 3 | Complete |
+| RPT-02 | Phase 3 | Complete |
 | RPT-03 | Phase 4 | Pending |
 | RPT-04 | Phase 4 | Pending |
 | RPT-05 | Phase 4 | Pending |

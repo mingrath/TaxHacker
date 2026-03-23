@@ -71,7 +71,7 @@ Plans:
 Plans:
 - [x] 03-01-PLAN.md -- Schema + CIT calculator + AI 65 tri flagging + non-deductible validator + business profile capital
 - [ ] 03-02-PLAN.md -- CIT report app (PND50/PND51) + credit/debit note app
-- [ ] 03-03-PLAN.md -- Monthly tax summary dashboard + non-deductible summary widgets
+- [x] 03-03-PLAN.md -- Monthly tax summary dashboard + non-deductible summary widgets
 
 ### Phase 4: Export + Interoperability
 **Goal**: A Thai SME owner can export all tax data in formats ready for Revenue Department e-filing, FlowAccount import, or handoff to an accountant
