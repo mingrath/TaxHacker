@@ -116,33 +116,37 @@ export default function AnalyzeForm({
   /** Auto-compute subtotal and vatAmount when total changes and vatType is not "none" */
   const handleTotalChange = useCallback((newTotal: number) => {
     setFormData((prev) => {
-      const updated = { ...prev, total: newTotal }
       if (prev.vatType !== "none" && newTotal > 0) {
-        // Total is in display units (baht), convert to satang for calculation
         const totalSatang = Math.round(newTotal * 100)
         const result = extractVATFromTotal(totalSatang)
-        updated.subtotal = formatSatangToDisplay(result.subtotal)
-        updated.vatAmount = formatSatangToDisplay(result.vatAmount)
+        return {
+          ...prev,
+          total: newTotal,
+          subtotal: formatSatangToDisplay(result.subtotal),
+          vatAmount: formatSatangToDisplay(result.vatAmount),
+        }
       }
-      return updated
+      return { ...prev, total: newTotal }
     })
   }, [])
 
   /** Auto-compute when VAT type changes */
   const handleVatTypeChange = useCallback((newVatType: string) => {
     setFormData((prev) => {
-      const updated = { ...prev, vatType: newVatType }
       const total = Number(prev.total) || 0
       if (newVatType !== "none" && total > 0) {
         const totalSatang = Math.round(total * 100)
         const result = extractVATFromTotal(totalSatang)
-        updated.subtotal = formatSatangToDisplay(result.subtotal)
-        updated.vatAmount = formatSatangToDisplay(result.vatAmount)
+        return {
+          ...prev,
+          vatType: newVatType,
+          subtotal: formatSatangToDisplay(result.subtotal),
+          vatAmount: formatSatangToDisplay(result.vatAmount),
+        }
       } else if (newVatType === "none") {
-        updated.subtotal = 0
-        updated.vatAmount = 0
+        return { ...prev, vatType: newVatType, subtotal: 0, vatAmount: 0 }
       }
-      return updated
+      return { ...prev, vatType: newVatType }
     })
   }, [])
 
@@ -329,7 +333,7 @@ export default function AnalyzeForm({
           />
         </div>
 
-        {(formData.total as number) != 0 && formData.currencyCode && formData.currencyCode !== settings.default_currency && (
+        {(formData.total as number) != 0 && Boolean(formData.currencyCode) && formData.currencyCode !== settings.default_currency && (
           <ToolWindow title={`Exchange rate on ${format(new Date((formData.issuedAt as string) || Date.now()), "LLLL dd, yyyy")}`}>
             <CurrencyConverterTool
               originalTotal={formData.total as number}
@@ -501,7 +505,7 @@ export default function AnalyzeForm({
           />
         ))}
 
-        {formData.items && (formData.items as unknown[]).length > 0 && (
+        {Array.isArray(formData.items) && (formData.items as unknown[]).length > 0 && (
           <ToolWindow title="Detected items">
             <ItemsDetectTool file={file} data={formData} />
           </ToolWindow>

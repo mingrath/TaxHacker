@@ -52,7 +52,7 @@ export function ReportPreview({
       businessProfile,
       period,
     })
-    const blob = await pdf(element).toBlob()
+    const blob = await pdf(element as any).toBlob()
     return blob
   }, [pp30Fields, businessProfile, period])
 
@@ -62,7 +62,7 @@ export function ReportPreview({
       businessProfile,
       period,
     })
-    const blob = await pdf(element).toBlob()
+    const blob = await pdf(element as any).toBlob()
     return blob
   }, [reportData.inputTransactions, businessProfile, period])
 
@@ -72,7 +72,7 @@ export function ReportPreview({
       businessProfile,
       period,
     })
-    const blob = await pdf(element).toBlob()
+    const blob = await pdf(element as any).toBlob()
     return blob
   }, [reportData.outputTransactions, businessProfile, period])
 

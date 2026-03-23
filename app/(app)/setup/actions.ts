@@ -21,13 +21,13 @@ export async function saveBusinessProfileAction(
     }
 
     await updateBusinessProfile(user.id, {
-      biz_company_name: validatedForm.data.biz_company_name,
-      biz_tax_id: validatedForm.data.biz_tax_id,
-      biz_branch: validatedForm.data.biz_branch,
-      biz_address: validatedForm.data.biz_address,
-      biz_vat_registered: validatedForm.data.biz_vat_registered,
-      biz_vat_reg_date: validatedForm.data.biz_vat_reg_date,
-      biz_fiscal_year_start: validatedForm.data.biz_fiscal_year_start,
+      companyName: validatedForm.data.biz_company_name,
+      taxId: validatedForm.data.biz_tax_id,
+      branch: validatedForm.data.biz_branch,
+      address: validatedForm.data.biz_address,
+      vatRegistered: validatedForm.data.biz_vat_registered === "true",
+      vatRegDate: validatedForm.data.biz_vat_reg_date || null,
+      fiscalYearStart: parseInt(validatedForm.data.biz_fiscal_year_start, 10),
     })
 
     revalidatePath("/setup")
