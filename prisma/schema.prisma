@@ -191,6 +191,13 @@ model Transaction {
   createdAt             DateTime  @default(now()) @map("created_at")
   updatedAt             DateTime  @updatedAt @map("updated_at")
   text                  String?
+  vatType               String?   @map("vat_type")
+  vatAmount             Int?      @map("vat_amount")
+  vatRate               Int?      @default(700) @map("vat_rate")
+  subtotal              Int?
+  merchantTaxId         String?   @map("merchant_tax_id")
+  merchantBranch        String?   @map("merchant_branch")
+  documentNumber        String?   @map("document_number")
 
   @@index([userId])
   @@index([projectCode])
@@ -199,6 +206,7 @@ model Transaction {
   @@index([name])
   @@index([merchant])
   @@index([total])
+  @@index([vatType])
   @@map("transactions")
 }
 
