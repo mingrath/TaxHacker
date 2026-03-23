@@ -1,0 +1,6 @@
+export const manifest = {
+  code: "vat-report",
+  name: "\u0e23\u0e32\u0e22\u0e07\u0e32\u0e19 VAT",
+  description: "\u0e23\u0e32\u0e22\u0e07\u0e32\u0e19\u0e20\u0e32\u0e29\u0e35\u0e0b\u0e37\u0e49\u0e2d \u0e20\u0e32\u0e29\u0e35\u0e02\u0e32\u0e22 \u0e41\u0e25\u0e30 \u0e20.\u0e1e.30",
+  icon: "FileText",
+}

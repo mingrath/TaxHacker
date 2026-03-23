@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/db"
 import { calcTotalPerCurrency } from "@/lib/stats"
 import { Prisma } from "@/prisma/client"
+import { differenceInDays, subMonths } from "date-fns"
 import { cache } from "react"
 import { TransactionFilters } from "./transactions"
 
@@ -319,5 +320,112 @@ export const getDetailedTimeSeriesStats = cache(
         categories: Array.from(item.categories.values()).filter((cat) => cat.income > 0 || cat.expenses > 0),
       }))
       .sort((a, b) => a.date.getTime() - b.date.getTime())
+  }
+)
+
+// --- VAT Stats ---
+
+export type VATSummary = {
+  outputVAT: number // total output VAT in satang for period
+  inputVAT: number // total input VAT in satang for period
+  netVAT: number // outputVAT - inputVAT (positive = payable, negative = credit)
+  outputCount: number // number of output VAT transactions
+  inputCount: number // number of input VAT transactions
+}
+
+export const getVATSummary = cache(
+  async (userId: string, filters: TransactionFilters = {}): Promise<VATSummary> => {
+    const dateFilter: Prisma.TransactionWhereInput = {}
+    if (filters.dateFrom || filters.dateTo) {
+      dateFilter.issuedAt = {
+        gte: filters.dateFrom ? new Date(filters.dateFrom) : undefined,
+        lte: filters.dateTo ? new Date(filters.dateTo) : undefined,
+      }
+    }
+
+    const [outputResult, inputResult] = await Promise.all([
+      prisma.transaction.aggregate({
+        where: { userId, vatType: "output", ...dateFilter },
+        _sum: { vatAmount: true },
+        _count: true,
+      }),
+      prisma.transaction.aggregate({
+        where: { userId, vatType: "input", ...dateFilter },
+        _sum: { vatAmount: true },
+        _count: true,
+      }),
+    ])
+
+    const outputVAT = outputResult._sum.vatAmount || 0
+    const inputVAT = inputResult._sum.vatAmount || 0
+
+    return {
+      outputVAT,
+      inputVAT,
+      netVAT: outputVAT - inputVAT,
+      outputCount: outputResult._count,
+      inputCount: inputResult._count,
+    }
+  }
+)
+
+export type ExpiringInvoice = {
+  id: string
+  merchant: string | null
+  issuedAt: Date
+  vatAmount: number
+  daysRemaining: number
+}
+
+export const getExpiringInvoices = cache(
+  async (userId: string): Promise<ExpiringInvoice[]> => {
+    const now = new Date()
+    const sixMonthsAgo = subMonths(now, 6)
+    const fiveMonthsAgo = subMonths(now, 5)
+
+    const expiring = await prisma.transaction.findMany({
+      where: {
+        userId,
+        vatType: "input",
+        issuedAt: {
+          gte: sixMonthsAgo,
+          lte: fiveMonthsAgo,
+        },
+      },
+      select: { id: true, merchant: true, issuedAt: true, vatAmount: true },
+      orderBy: { issuedAt: "asc" },
+    })
+
+    return expiring
+      .filter((t): t is typeof t & { issuedAt: Date } => t.issuedAt !== null)
+      .map((t) => {
+        const expiryDate = subMonths(t.issuedAt, -6) // 6 months after issued
+        const daysRemaining = differenceInDays(expiryDate, now)
+        return {
+          id: t.id,
+          merchant: t.merchant,
+          issuedAt: t.issuedAt,
+          vatAmount: t.vatAmount || 0,
+          daysRemaining: Math.max(0, daysRemaining),
+        }
+      })
+  }
+)
+
+export const getRevenueYTD = cache(
+  async (userId: string): Promise<number> => {
+    const now = new Date()
+    const yearStart = new Date(now.getFullYear(), 0, 1) // January 1 of current year
+
+    const result = await prisma.transaction.aggregate({
+      where: {
+        userId,
+        type: "income",
+        issuedAt: { gte: yearStart },
+      },
+      _sum: { total: true },
+    })
+
+    return result._sum.total || 0
   }
 )
