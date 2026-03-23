@@ -13,8 +13,9 @@ import { FormSelectType } from "@/components/forms/select-type"
 import { FormInput, FormSelect, FormTextarea } from "@/components/forms/simple"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ValidationBadge, TaxInvoiceValidationSummary, FIELD_VALIDATION_MAP } from "@/components/unsorted/tax-invoice-validation"
-import { extractVATFromTotal, formatSatangToDisplay } from "@/services/tax-calculator"
+import { extractVATFromTotal, formatSatangToDisplay, WHT_RATE_OPTIONS } from "@/services/tax-calculator"
 import type { ValidationResult } from "@/ai/validators/tax-invoice-validator"
 import { Category, Currency, Field, File, Project } from "@/prisma/client"
 import { format } from "date-fns"
@@ -85,6 +86,10 @@ export default function AnalyzeForm({
       merchantTaxId: "",
       merchantBranch: "00000",
       documentNumber: "",
+      // WHT fields
+      whtRate: 0,
+      whtAmount: 0,
+      whtType: "",
     }
 
     // Add extra fields
@@ -209,6 +214,10 @@ export default function AnalyzeForm({
         if (output.vat_amount) mapped.vatAmount = Number(output.vat_amount) || 0
         if (output.vat_type) mapped.vatType = output.vat_type
 
+        // Map WHT fields from AI
+        if (output.wht_rate !== undefined) mapped.whtRate = Number(output.wht_rate) || 0
+        if (output.wht_type) mapped.whtType = output.wht_type
+
         // Auto-compute subtotal if we have total and vatAmount
         const total = Number(mapped.total || formData.total) || 0
         const vatAmountFromAI = Number(mapped.vatAmount) || 0
@@ -220,6 +229,14 @@ export default function AnalyzeForm({
           const result = extractVATFromTotal(totalSatang)
           mapped.subtotal = formatSatangToDisplay(result.subtotal)
           mapped.vatAmount = formatSatangToDisplay(result.vatAmount)
+        }
+
+        // Auto-compute WHT amount if whtRate and subtotal are available
+        const whtRateVal = Number(mapped.whtRate) || 0
+        const subtotalForWht = Number(mapped.subtotal) || 0
+        if (whtRateVal > 0 && subtotalForWht > 0) {
+          const subtotalSatang = Math.round(subtotalForWht * 100)
+          mapped.whtAmount = Math.round(subtotalSatang * whtRateVal / 10000) / 100
         }
 
         setFormData((prev) => ({ ...prev, ...mapped }))
@@ -491,6 +508,77 @@ export default function AnalyzeForm({
             </>
           )}
         </div>
+
+        {/* ---- WHT Section (ภาษีหัก ณ ที่จ่าย) ---- */}
+        {formData.type === "expense" && (
+          <div className="space-y-4 border-t pt-4 mt-4">
+            <h3 className="text-sm font-bold text-foreground">ภาษีหัก ณ ที่จ่าย</h3>
+
+            <div className="space-y-1">
+              <label className="text-sm text-muted-foreground">อัตราภาษีหัก ณ ที่จ่าย</label>
+              <Select
+                value={String(formData.whtRate || 0)}
+                onValueChange={(value) => {
+                  const selectedRate = parseInt(value, 10)
+                  setFormData((prev) => {
+                    const subtotalVal = Number(prev.subtotal) || 0
+                    const subtotalSatang = Math.round(subtotalVal * 100)
+                    const whtAmountSatang = selectedRate > 0 && subtotalSatang > 0
+                      ? Math.round(subtotalSatang * selectedRate / 10000)
+                      : 0
+                    return {
+                      ...prev,
+                      whtRate: selectedRate,
+                      whtAmount: whtAmountSatang / 100,
+                    }
+                  })
+                }}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="เลือกอัตราหัก ณ ที่จ่าย" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="0">ไม่หัก ณ ที่จ่าย</SelectItem>
+                  {WHT_RATE_OPTIONS.map((option) => (
+                    <SelectItem key={option.rate} value={String(option.rate)}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <input type="hidden" name="whtRate" value={String(formData.whtRate || 0)} />
+            </div>
+
+            {Number(formData.whtRate) > 0 && (
+              <>
+                <div className="text-sm text-muted-foreground">
+                  จำนวนเงินภาษีหัก ณ ที่จ่าย:{" "}
+                  <span className="font-medium text-foreground">
+                    {Number(formData.whtAmount || 0).toLocaleString("th-TH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} บาท
+                  </span>
+                </div>
+                <input type="hidden" name="whtAmount" value={String(Math.round(Number(formData.whtAmount || 0) * 100))} />
+
+                <div className="space-y-1">
+                  <label className="text-sm text-muted-foreground">แบบนำส่ง</label>
+                  <Select
+                    value={(formData.whtType as string) || "pnd53"}
+                    onValueChange={(value) => setFormData((prev) => ({ ...prev, whtType: value }))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="เลือกแบบนำส่ง" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="pnd3">ภ.ง.ด.3 (บุคคลธรรมดา)</SelectItem>
+                      <SelectItem value="pnd53">ภ.ง.ด.53 (นิติบุคคล)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <input type="hidden" name="whtType" value={(formData.whtType as string) || ""} />
+                </div>
+              </>
+            )}
+          </div>
+        )}
 
         {extraFields.map((field) => (
           <FormInput

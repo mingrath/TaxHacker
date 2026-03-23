@@ -94,5 +94,24 @@ export const transactionFormSchema = z
       }),
     merchantBranch: z.string().optional().nullable().transform((val) => val || null),
     documentNumber: z.string().optional().nullable().transform((val) => val || null),
+    // WHT fields
+    whtRate: z
+      .string()
+      .optional()
+      .transform((val) => {
+        if (!val || val.trim() === "") return null
+        const num = parseInt(val, 10)
+        return isNaN(num) ? null : num
+      }),
+    whtAmount: z
+      .string()
+      .optional()
+      .transform((val) => {
+        if (!val || val.trim() === "") return null
+        const num = parseInt(val, 10)
+        return isNaN(num) ? null : num
+      }),
+    whtType: z.string().optional().nullable().transform((val) => val || null),
+    contactId: z.string().optional().nullable().transform((val) => val || null),
   })
   .catchall(z.string())
