@@ -10,13 +10,22 @@ import { FormSelectCategory } from "@/components/forms/select-category"
 import { FormSelectCurrency } from "@/components/forms/select-currency"
 import { FormSelectProject } from "@/components/forms/select-project"
 import { FormSelectType } from "@/components/forms/select-type"
-import { FormInput, FormTextarea } from "@/components/forms/simple"
+import { FormInput, FormSelect, FormTextarea } from "@/components/forms/simple"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { ValidationBadge, TaxInvoiceValidationSummary, FIELD_VALIDATION_MAP } from "@/components/unsorted/tax-invoice-validation"
+import { extractVATFromTotal, formatSatangToDisplay } from "@/services/tax-calculator"
+import type { ValidationResult } from "@/ai/validators/tax-invoice-validator"
 import { Category, Currency, Field, File, Project } from "@/prisma/client"
 import { format } from "date-fns"
 import { ArrowDownToLine, Brain, Loader2, Trash2 } from "lucide-react"
-import { startTransition, useActionState, useMemo, useState } from "react"
+import { startTransition, useActionState, useCallback, useMemo, useState } from "react"
+
+const VAT_TYPE_OPTIONS = [
+  { code: "input", name: "ภาษีซื้อ" },
+  { code: "output", name: "ภาษีขาย" },
+  { code: "none", name: "ไม่มี VAT" },
+]
 
 export default function AnalyzeForm({
   file,
@@ -40,6 +49,7 @@ export default function AnalyzeForm({
   const [deleteState, deleteAction, isDeleting] = useActionState(deleteUnsortedFileAction, null)
   const [isSaving, setIsSaving] = useState(false)
   const [saveError, setSaveError] = useState("")
+  const [validation, setValidation] = useState<ValidationResult | null>(null)
 
   const fieldMap = useMemo(() => {
     return fields.reduce(
@@ -53,7 +63,7 @@ export default function AnalyzeForm({
 
   const extraFields = useMemo(() => fields.filter((field) => field.isExtra), [fields])
   const initialFormState = useMemo(() => {
-    const baseState = {
+    const baseState: Record<string, unknown> = {
       name: file.filename,
       merchant: "",
       description: "",
@@ -68,6 +78,13 @@ export default function AnalyzeForm({
       note: "",
       text: "",
       items: [],
+      // VAT fields
+      vatType: "none",
+      subtotal: 0.0,
+      vatAmount: 0.0,
+      merchantTaxId: "",
+      merchantBranch: "00000",
+      documentNumber: "",
     }
 
     // Add extra fields
@@ -96,6 +113,50 @@ export default function AnalyzeForm({
   }, [file.filename, settings, extraFields, file.cachedParseResult])
   const [formData, setFormData] = useState(initialFormState)
 
+  /** Auto-compute subtotal and vatAmount when total changes and vatType is not "none" */
+  const handleTotalChange = useCallback((newTotal: number) => {
+    setFormData((prev) => {
+      const updated = { ...prev, total: newTotal }
+      if (prev.vatType !== "none" && newTotal > 0) {
+        // Total is in display units (baht), convert to satang for calculation
+        const totalSatang = Math.round(newTotal * 100)
+        const result = extractVATFromTotal(totalSatang)
+        updated.subtotal = formatSatangToDisplay(result.subtotal)
+        updated.vatAmount = formatSatangToDisplay(result.vatAmount)
+      }
+      return updated
+    })
+  }, [])
+
+  /** Auto-compute when VAT type changes */
+  const handleVatTypeChange = useCallback((newVatType: string) => {
+    setFormData((prev) => {
+      const updated = { ...prev, vatType: newVatType }
+      const total = Number(prev.total) || 0
+      if (newVatType !== "none" && total > 0) {
+        const totalSatang = Math.round(total * 100)
+        const result = extractVATFromTotal(totalSatang)
+        updated.subtotal = formatSatangToDisplay(result.subtotal)
+        updated.vatAmount = formatSatangToDisplay(result.vatAmount)
+      } else if (newVatType === "none") {
+        updated.subtotal = 0
+        updated.vatAmount = 0
+      }
+      return updated
+    })
+  }, [])
+
+  /** Look up validation status for a given form field code */
+  const getFieldValidation = useCallback(
+    (fieldCode: string) => {
+      if (!validation) return null
+      const validationKey = FIELD_VALIDATION_MAP[fieldCode]
+      if (!validationKey) return null
+      return validation.fields[validationKey] ?? null
+    },
+    [validation]
+  )
+
   async function saveAsTransaction(formData: FormData) {
     setSaveError("")
     setIsSaving(true)
@@ -104,12 +165,12 @@ export default function AnalyzeForm({
       setIsSaving(false)
 
       if (result.success) {
-        showNotification({ code: "global.banner", message: "Saved!", type: "success" })
+        showNotification({ code: "global.banner", message: "บันทึกสำเร็จ", type: "success" })
         showNotification({ code: "sidebar.transactions", message: "new" })
         setTimeout(() => showNotification({ code: "sidebar.transactions", message: "" }), 3000)
       } else {
-        setSaveError(result.error ? result.error : "Something went wrong...")
-        showNotification({ code: "global.banner", message: "Failed to save", type: "failed" })
+        setSaveError(result.error ? result.error : "เกิดข้อผิดพลาด...")
+        showNotification({ code: "global.banner", message: "บันทึกไม่สำเร็จ", type: "failed" })
       }
     })
   }
@@ -117,25 +178,57 @@ export default function AnalyzeForm({
   const startAnalyze = async () => {
     setIsAnalyzing(true)
     setAnalyzeError("")
+    setValidation(null)
     try {
-      setAnalyzeStep("Analyzing...")
+      setAnalyzeStep("กำลังวิเคราะห์...")
       const results = await analyzeFileAction(file, settings, fields, categories, projects)
 
       console.log("Analysis results:", results)
 
       if (!results.success) {
-        setAnalyzeError(results.error ? results.error : "Something went wrong...")
+        setAnalyzeError(results.error ? results.error : "วิเคราะห์ไม่สำเร็จ -- ลองอัปโหลดภาพที่ชัดขึ้นหรือลองใหม่อีกครั้ง")
       } else {
+        const output = results.data?.output || {}
         const nonEmptyFields = Object.fromEntries(
-          Object.entries(results.data?.output || {}).filter(
-            ([_, value]) => value !== null && value !== undefined && value !== ""
+          Object.entries(output).filter(
+            ([key, value]) => key !== "_validation" && value !== null && value !== undefined && value !== ""
           )
         )
-        setFormData({ ...formData, ...nonEmptyFields })
+
+        // Map AI-extracted fields to form state
+        const mapped: Record<string, unknown> = { ...nonEmptyFields }
+
+        // Map snake_case AI fields to camelCase form fields
+        if (output.merchant_tax_id) mapped.merchantTaxId = output.merchant_tax_id
+        if (output.merchant_branch) mapped.merchantBranch = output.merchant_branch
+        if (output.document_number) mapped.documentNumber = output.document_number
+        if (output.vat_amount) mapped.vatAmount = Number(output.vat_amount) || 0
+        if (output.vat_type) mapped.vatType = output.vat_type
+
+        // Auto-compute subtotal if we have total and vatAmount
+        const total = Number(mapped.total || formData.total) || 0
+        const vatAmountFromAI = Number(mapped.vatAmount) || 0
+        if (total > 0 && vatAmountFromAI > 0) {
+          // Both values from AI in display units
+          mapped.subtotal = total - vatAmountFromAI
+        } else if (total > 0 && mapped.vatType && mapped.vatType !== "none") {
+          const totalSatang = Math.round(total * 100)
+          const result = extractVATFromTotal(totalSatang)
+          mapped.subtotal = formatSatangToDisplay(result.subtotal)
+          mapped.vatAmount = formatSatangToDisplay(result.vatAmount)
+        }
+
+        setFormData((prev) => ({ ...prev, ...mapped }))
+
+        // Set validation result
+        const validationData = (output as Record<string, unknown>)._validation as ValidationResult | undefined
+        if (validationData) {
+          setValidation(validationData)
+        }
       }
     } catch (error) {
       console.error("Analysis failed:", error)
-      setAnalyzeError(error instanceof Error ? error.message : "Analysis failed")
+      setAnalyzeError(error instanceof Error ? error.message : "วิเคราะห์ไม่สำเร็จ")
     } finally {
       setIsAnalyzing(false)
       setAnalyzeStep("")
@@ -146,7 +239,7 @@ export default function AnalyzeForm({
     <>
       {file.isSplitted ? (
         <div className="flex justify-end">
-          <Badge variant="outline">This file has been split up</Badge>
+          <Badge variant="outline">ไฟล์นี้ถูกแยกรายการแล้ว</Badge>
         </div>
       ) : (
         <Button className="w-full mb-6 py-6 text-lg" onClick={startAnalyze} disabled={isAnalyzing} data-analyze-button>
@@ -158,7 +251,7 @@ export default function AnalyzeForm({
           ) : (
             <>
               <Brain className="mr-1 h-4 w-4" />
-              <span>Analyze with AI</span>
+              <span>วิเคราะห์</span>
             </>
           )}
         </Button>
@@ -169,125 +262,231 @@ export default function AnalyzeForm({
       <form className="space-y-4" action={saveAsTransaction}>
         <input type="hidden" name="fileId" value={file.id} />
         <FormInput
-          title={fieldMap.name.name}
+          title="ชื่อรายการ"
           name="name"
-          value={formData.name}
+          value={formData.name as string}
           onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
-          required={fieldMap.name.isRequired}
+          required={fieldMap.name?.isRequired}
         />
 
-        <FormInput
-          title={fieldMap.merchant.name}
-          name="merchant"
-          value={formData.merchant}
-          onChange={(e) => setFormData((prev) => ({ ...prev, merchant: e.target.value }))}
-          hideIfEmpty={!fieldMap.merchant.isVisibleInAnalysis}
-          required={fieldMap.merchant.isRequired}
-        />
+        <div className="flex items-end gap-2">
+          <div className="flex-1">
+            <FormInput
+              title="ผู้ขาย/ผู้ให้บริการ"
+              name="merchant"
+              value={formData.merchant as string}
+              onChange={(e) => setFormData((prev) => ({ ...prev, merchant: e.target.value }))}
+              hideIfEmpty={!fieldMap.merchant?.isVisibleInAnalysis}
+              required={fieldMap.merchant?.isRequired}
+            />
+          </div>
+          {getFieldValidation("merchant") && (
+            <ValidationBadge {...getFieldValidation("merchant")!} />
+          )}
+        </div>
 
         <FormInput
-          title={fieldMap.description.name}
+          title="รายละเอียด"
           name="description"
-          value={formData.description}
+          value={formData.description as string}
           onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
-          hideIfEmpty={!fieldMap.description.isVisibleInAnalysis}
-          required={fieldMap.description.isRequired}
+          hideIfEmpty={!fieldMap.description?.isVisibleInAnalysis}
+          required={fieldMap.description?.isRequired}
         />
 
         <div className="flex flex-wrap gap-4">
           <FormInput
-            title={fieldMap.total.name}
+            title="จำนวนเงิน"
             name="total"
             type="number"
             step="0.01"
-            value={formData.total || ""}
+            value={(formData.total as number) || ""}
             onChange={(e) => {
               const newValue = parseFloat(e.target.value || "0")
-              !isNaN(newValue) && setFormData((prev) => ({ ...prev, total: newValue }))
+              if (!isNaN(newValue)) handleTotalChange(newValue)
             }}
             className="w-32"
-            required={fieldMap.total.isRequired}
+            required={fieldMap.total?.isRequired}
           />
 
           <FormSelectCurrency
-            title={fieldMap.currencyCode.name}
+            title="สกุลเงิน"
             currencies={currencies}
             name="currencyCode"
-            value={formData.currencyCode}
+            value={formData.currencyCode as string}
             onValueChange={(value) => setFormData((prev) => ({ ...prev, currencyCode: value }))}
-            hideIfEmpty={!fieldMap.currencyCode.isVisibleInAnalysis}
-            required={fieldMap.currencyCode.isRequired}
+            hideIfEmpty={!fieldMap.currencyCode?.isVisibleInAnalysis}
+            required={fieldMap.currencyCode?.isRequired}
           />
 
           <FormSelectType
-            title={fieldMap.type.name}
+            title="ประเภท"
             name="type"
-            value={formData.type}
+            value={formData.type as string}
             onValueChange={(value) => setFormData((prev) => ({ ...prev, type: value }))}
-            hideIfEmpty={!fieldMap.type.isVisibleInAnalysis}
-            required={fieldMap.type.isRequired}
+            hideIfEmpty={!fieldMap.type?.isVisibleInAnalysis}
+            required={fieldMap.type?.isRequired}
           />
         </div>
 
-        {formData.total != 0 && formData.currencyCode && formData.currencyCode !== settings.default_currency && (
-          <ToolWindow title={`Exchange rate on ${format(new Date(formData.issuedAt || Date.now()), "LLLL dd, yyyy")}`}>
+        {(formData.total as number) != 0 && formData.currencyCode && formData.currencyCode !== settings.default_currency && (
+          <ToolWindow title={`Exchange rate on ${format(new Date((formData.issuedAt as string) || Date.now()), "LLLL dd, yyyy")}`}>
             <CurrencyConverterTool
-              originalTotal={formData.total}
-              originalCurrencyCode={formData.currencyCode}
+              originalTotal={formData.total as number}
+              originalCurrencyCode={formData.currencyCode as string}
               targetCurrencyCode={settings.default_currency}
-              date={new Date(formData.issuedAt || Date.now())}
+              date={new Date((formData.issuedAt as string) || Date.now())}
               onChange={(value) => setFormData((prev) => ({ ...prev, convertedTotal: value }))}
             />
             <input type="hidden" name="convertedCurrencyCode" value={settings.default_currency} />
           </ToolWindow>
         )}
 
-        <div className="flex flex-row gap-4">
-          <FormInput
-            title={fieldMap.issuedAt.name}
-            type="date"
-            name="issuedAt"
-            value={formData.issuedAt}
-            onChange={(e) => setFormData((prev) => ({ ...prev, issuedAt: e.target.value }))}
-            hideIfEmpty={!fieldMap.issuedAt.isVisibleInAnalysis}
-            required={fieldMap.issuedAt.isRequired}
-          />
+        <div className="flex items-end gap-2">
+          <div className="flex-1">
+            <FormInput
+              title="วันที่"
+              type="date"
+              name="issuedAt"
+              value={formData.issuedAt as string}
+              onChange={(e) => setFormData((prev) => ({ ...prev, issuedAt: e.target.value }))}
+              hideIfEmpty={!fieldMap.issuedAt?.isVisibleInAnalysis}
+              required={fieldMap.issuedAt?.isRequired}
+            />
+          </div>
+          {getFieldValidation("issuedAt") && (
+            <ValidationBadge {...getFieldValidation("issuedAt")!} />
+          )}
         </div>
 
         <div className="flex flex-row gap-4">
           <FormSelectCategory
-            title={fieldMap.categoryCode.name}
+            title="หมวดหมู่"
             categories={categories}
             name="categoryCode"
-            value={formData.categoryCode}
+            value={formData.categoryCode as string}
             onValueChange={(value) => setFormData((prev) => ({ ...prev, categoryCode: value }))}
-            placeholder="Select Category"
-            hideIfEmpty={!fieldMap.categoryCode.isVisibleInAnalysis}
-            required={fieldMap.categoryCode.isRequired}
+            placeholder="เลือกหมวดหมู่"
+            hideIfEmpty={!fieldMap.categoryCode?.isVisibleInAnalysis}
+            required={fieldMap.categoryCode?.isRequired}
           />
 
           {projects.length > 0 && (
             <FormSelectProject
-              title={fieldMap.projectCode.name}
+              title="โปรเจกต์"
               projects={projects}
               name="projectCode"
-              value={formData.projectCode}
+              value={formData.projectCode as string}
               onValueChange={(value) => setFormData((prev) => ({ ...prev, projectCode: value }))}
-              placeholder="Select Project"
-              hideIfEmpty={!fieldMap.projectCode.isVisibleInAnalysis}
-              required={fieldMap.projectCode.isRequired}
+              placeholder="เลือกโปรเจกต์"
+              hideIfEmpty={!fieldMap.projectCode?.isVisibleInAnalysis}
+              required={fieldMap.projectCode?.isRequired}
             />
           )}
         </div>
 
         <FormInput
-          title={fieldMap.note.name}
+          title="หมายเหตุ"
           name="note"
-          value={formData.note}
+          value={formData.note as string}
           onChange={(e) => setFormData((prev) => ({ ...prev, note: e.target.value }))}
-          hideIfEmpty={!fieldMap.note.isVisibleInAnalysis}
-          required={fieldMap.note.isRequired}
+          hideIfEmpty={!fieldMap.note?.isVisibleInAnalysis}
+          required={fieldMap.note?.isRequired}
         />
+
+        {/* ---- Tax Information Section (ข้อมูลภาษี) ---- */}
+        <div className="space-y-4 border-t pt-4 mt-4">
+          <h3 className="text-sm font-bold text-foreground">ข้อมูลภาษี</h3>
+
+          {validation && <TaxInvoiceValidationSummary validation={validation} />}
+
+          <FormSelect
+            title="ประเภทภาษี"
+            name="vatType"
+            items={VAT_TYPE_OPTIONS}
+            value={formData.vatType as string}
+            onValueChange={handleVatTypeChange}
+            placeholder="เลือกประเภทภาษี"
+          />
+
+          {formData.vatType !== "none" && (
+            <>
+              <div className="flex flex-wrap gap-4">
+                <FormInput
+                  title="ยอดก่อน VAT"
+                  name="subtotal"
+                  type="number"
+                  step="0.01"
+                  value={(formData.subtotal as number) || ""}
+                  onChange={(e) => {
+                    const val = parseFloat(e.target.value || "0")
+                    if (!isNaN(val)) setFormData((prev) => ({ ...prev, subtotal: val }))
+                  }}
+                  className="w-40"
+                />
+
+                <FormInput
+                  title="จำนวน VAT"
+                  name="vatAmount"
+                  type="number"
+                  step="0.01"
+                  value={(formData.vatAmount as number) || ""}
+                  onChange={(e) => {
+                    const val = parseFloat(e.target.value || "0")
+                    if (!isNaN(val)) setFormData((prev) => ({ ...prev, vatAmount: val }))
+                  }}
+                  className="w-40"
+                />
+              </div>
+
+              <div className="flex items-end gap-2">
+                <div className="flex-1">
+                  <FormInput
+                    title="เลขประจำตัวผู้เสียภาษี (ผู้ขาย)"
+                    name="merchantTaxId"
+                    value={formData.merchantTaxId as string}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, merchantTaxId: e.target.value }))}
+                    maxLength={13}
+                    placeholder="0000000000000"
+                  />
+                </div>
+                {getFieldValidation("merchant_tax_id") && (
+                  <ValidationBadge {...getFieldValidation("merchant_tax_id")!} />
+                )}
+              </div>
+
+              <div className="flex items-end gap-2">
+                <div className="flex-1">
+                  <FormInput
+                    title="สาขา"
+                    name="merchantBranch"
+                    value={formData.merchantBranch as string}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, merchantBranch: e.target.value }))}
+                    placeholder="00000"
+                  />
+                </div>
+                {getFieldValidation("merchant_branch") && (
+                  <ValidationBadge {...getFieldValidation("merchant_branch")!} />
+                )}
+              </div>
+
+              <div className="flex items-end gap-2">
+                <div className="flex-1">
+                  <FormInput
+                    title="เลขที่เอกสาร"
+                    name="documentNumber"
+                    value={formData.documentNumber as string}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, documentNumber: e.target.value }))}
+                    placeholder="INV-XXXXXXXX"
+                  />
+                </div>
+                {getFieldValidation("document_number") && (
+                  <ValidationBadge {...getFieldValidation("document_number")!} />
+                )}
+              </div>
+            </>
+          )}
+        </div>
 
         {extraFields.map((field) => (
           <FormInput
@@ -295,14 +494,14 @@ export default function AnalyzeForm({
             type="text"
             title={field.name}
             name={field.code}
-            value={formData[field.code as keyof typeof formData]}
+            value={formData[field.code as keyof typeof formData] as string}
             onChange={(e) => setFormData((prev) => ({ ...prev, [field.code]: e.target.value }))}
             hideIfEmpty={!field.isVisibleInAnalysis}
             required={field.isRequired}
           />
         ))}
 
-        {formData.items && formData.items.length > 0 && (
+        {formData.items && (formData.items as unknown[]).length > 0 && (
           <ToolWindow title="Detected items">
             <ItemsDetectTool file={file} data={formData} />
           </ToolWindow>
@@ -311,11 +510,11 @@ export default function AnalyzeForm({
         <div className="hidden">
           <input type="text" name="items" value={JSON.stringify(formData.items)} readOnly />
           <FormTextarea
-            title={fieldMap.text.name}
+            title="ข้อความที่สกัดได้"
             name="text"
-            value={formData.text}
+            value={formData.text as string}
             onChange={(e) => setFormData((prev) => ({ ...prev, text: e.target.value }))}
-            hideIfEmpty={!fieldMap.text.isVisibleInAnalysis}
+            hideIfEmpty={!fieldMap.text?.isVisibleInAnalysis}
           />
         </div>
 
@@ -327,19 +526,19 @@ export default function AnalyzeForm({
             disabled={isDeleting}
           >
             <Trash2 className="h-4 w-4" />
-            {isDeleting ? "⏳ Deleting..." : "Delete"}
+            {isDeleting ? "กำลังลบ..." : "ลบ"}
           </Button>
 
           <Button type="submit" disabled={isSaving} data-save-button>
             {isSaving ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Saving...
+                กำลังบันทึก...
               </>
             ) : (
               <>
                 <ArrowDownToLine className="h-4 w-4" />
-                Save as Transaction
+                บันทึกรายการ
               </>
             )}
           </Button>
