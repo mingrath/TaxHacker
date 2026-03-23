@@ -36,7 +36,7 @@ Plans:
 - [x] 01-02-PLAN.md -- Setup wizard and THSarabunNew PDF font infrastructure
 - [x] 01-03-PLAN.md -- AI Thai receipt scanning with Section 86/4 validation
 - [x] 01-04-PLAN.md -- VAT dashboard widgets, expiry warnings, threshold alerts
-- [ ] 01-05-PLAN.md -- PP30 + tax report PDF generation, settings, transaction edit
+- [x] 01-05-PLAN.md -- PP30 + tax report PDF generation, settings, transaction edit
 
 ### Phase 2: WHT + Tax Invoices + Filing Deadlines
 **Goal**: A Thai SME owner can manage withholding tax on payments, create and issue tax invoices, and never miss a filing deadline

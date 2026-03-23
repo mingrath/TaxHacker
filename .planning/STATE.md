@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 01-04-PLAN.md
-last_updated: "2026-03-23T11:42:56.024Z"
+stopped_at: Completed 01-05-PLAN.md
+last_updated: "2026-03-23T12:20:35.332Z"
 progress:
   total_phases: 4
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 5
-  completed_plans: 4
+  completed_plans: 5
 ---
 
 # Project State
@@ -50,6 +50,7 @@ Plan: 5 of 5
 | Phase 01 P01 | 9min | 2 tasks | 15 files |
 | Phase 01 P03 | 4min | 2 tasks | 6 files |
 | Phase 01 P04 | 6min | 2 tasks | 8 files |
+| Phase 01 P05 | 17min | 3 tasks | 19 files |
 
 ## Accumulated Context
 
@@ -70,6 +71,9 @@ Recent decisions affecting current work:
 - [Phase 01]: VAT fields mapped from snake_case AI output to camelCase Prisma columns in save action
 - [Phase 01]: Cookie-based middleware gate for setup wizard (Edge runtime cannot run Prisma)
 - [Phase 01]: Satang values passed directly to formatCurrency (handles /100 internally) -- no double-division
+- [Phase 01]: PDF generation is client-side via pdf() in report-preview.tsx to avoid server memory pressure
+- [Phase 01]: VAT fields added to FIRST_CLASS_COLUMNS set in models/transactions.ts for correct Prisma column passthrough
+- [Phase 01]: Business profile form isolated into components/settings/business-profile-form.tsx for maintainability
 
 ### Pending Todos
 
@@ -83,6 +87,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-23T11:42:56.022Z
-Stopped at: Completed 01-04-PLAN.md
+Last session: 2026-03-23T12:20:35.330Z
+Stopped at: Completed 01-05-PLAN.md
 Resume file: None
