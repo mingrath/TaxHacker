@@ -56,4 +56,36 @@ export const thaiPdfStyles = StyleSheet.create({
     color: "#6b7280",
     textAlign: "center",
   },
+  // Shared form styles for WHT forms (50 Tawi, PND3, PND53)
+  formSection: {
+    marginBottom: 8,
+    borderWidth: 0.5,
+    borderColor: "#d1d5db",
+    padding: 8,
+  },
+  formSectionHeader: {
+    fontSize: 11,
+    fontWeight: "bold",
+    marginBottom: 4,
+    backgroundColor: "#f3f4f6",
+    padding: 3,
+  },
+  formRow: {
+    flexDirection: "row" as const,
+    marginBottom: 2,
+  },
+  formLabel: {
+    fontSize: 11,
+    width: 160,
+  },
+  formValue: {
+    fontSize: 11,
+    flex: 1,
+  },
+  totalRow: {
+    flexDirection: "row" as const,
+    padding: 4,
+    backgroundColor: "#f9fafb",
+    fontWeight: "bold",
+  },
 })
