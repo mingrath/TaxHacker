@@ -56,8 +56,8 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Filing & Deadlines (FILE)
 
 - [x] **FILE-01**: Thai tax calendar showing all filing deadlines (PP30 by 15th/23rd, PND3/53 by 7th/15th)
-- [ ] **FILE-02**: Filing deadline reminders (visual alerts on dashboard)
-- [ ] **FILE-03**: Filing status tracker per form per month (pending/filed/overdue)
+- [x] **FILE-02**: Filing deadline reminders (visual alerts on dashboard)
+- [x] **FILE-03**: Filing status tracker per form per month (pending/filed/overdue)
 - [x] **FILE-04**: Thai public holiday awareness for deadline adjustment
 
 ### Reports & Export (RPT)
@@ -141,8 +141,8 @@ Deferred to future release. Tracked but not in current roadmap.
 | INV-03 | Phase 3 | Pending |
 | INV-04 | Phase 2 | Complete |
 | FILE-01 | Phase 2 | Complete |
-| FILE-02 | Phase 2 | Pending |
-| FILE-03 | Phase 2 | Pending |
+| FILE-02 | Phase 2 | Complete |
+| FILE-03 | Phase 2 | Complete |
 | FILE-04 | Phase 2 | Complete |
 | RPT-01 | Phase 3 | Pending |
 | RPT-02 | Phase 3 | Pending |

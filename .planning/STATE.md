@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 02-03-PLAN.md
-last_updated: "2026-03-23T15:27:21.013Z"
+stopped_at: Completed 02-05-PLAN.md
+last_updated: "2026-03-23T15:39:38.088Z"
 progress:
   total_phases: 4
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 10
-  completed_plans: 9
+  completed_plans: 10
 ---
 
 # Project State
@@ -55,6 +55,7 @@ Plan: 5 of 5
 | Phase 02 P02 | 4min | 2 tasks | 3 files |
 | Phase 02 P04 | 6min | 2 tasks | 10 files |
 | Phase 02 P03 | 4min | 2 tasks | 9 files |
+| Phase 02 P05 | 25min | 3 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -86,6 +87,9 @@ Recent decisions affecting current work:
 - [Phase 02]: Sequential numbering uses Setting model with parseInt pattern in prisma.$transaction (String-safe)
 - [Phase 02]: Invoice data stored in AppData model for PDF regeneration (key: tax-invoice-{docNumber})
 - [Phase 02]: PDF generation is client-side via pdf() matching VAT report pattern
+- [Phase 02]: Filing deadline status toggle server action placed in components/dashboard/ to keep widget mutations co-located
+- [Phase 02]: getUpcomingDeadlines fetches previous month deadlines as Thai tax filing is always for the prior period
+- [Phase 02]: DeadlineWithStatus computed in stats model layer to keep dashboard page lean
 
 ### Pending Todos
 
@@ -99,6 +103,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-23T15:27:21.011Z
-Stopped at: Completed 02-03-PLAN.md
+Last session: 2026-03-23T15:39:38.086Z
+Stopped at: Completed 02-05-PLAN.md
 Resume file: None

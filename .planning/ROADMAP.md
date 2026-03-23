@@ -13,7 +13,7 @@ BanChee extends TaxHacker's existing AI receipt scanning foundation with a compl
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [ ] **Phase 1: Thai Foundation + VAT Compliance** - Business profile, Thai localization, AI Thai extraction, and complete VAT tracking with PP30 generation
-- [ ] **Phase 2: WHT + Tax Invoices + Filing Deadlines** - Withholding tax management, tax invoice creation, contact management, and filing calendar
+- [x] **Phase 2: WHT + Tax Invoices + Filing Deadlines** - Withholding tax management, tax invoice creation, contact management, and filing calendar (completed 2026-03-23)
 - [ ] **Phase 3: CIT + Tax Intelligence + Dashboard** - Corporate income tax helpers, Section 65 Tri flagging, credit note workflow, and tax summary dashboard
 - [ ] **Phase 4: Export + Interoperability** - Revenue Department XML, FlowAccount CSV, and Thai accountant Excel formats
 
@@ -55,7 +55,7 @@ Plans:
 - [x] 02-02-PLAN.md -- AI WHT rate suggestion and transaction WHT field integration
 - [x] 02-03-PLAN.md -- 50 Tawi certificate, PND3/PND53 report generation, batch download
 - [x] 02-04-PLAN.md -- Tax invoice creation with Section 86/4 enforcement, contact management
-- [ ] 02-05-PLAN.md -- Filing deadline dashboard alerts, status tracking, WHT summary widget
+- [x] 02-05-PLAN.md -- Filing deadline dashboard alerts, status tracking, WHT summary widget
 
 ### Phase 3: CIT + Tax Intelligence + Dashboard
 **Goal**: A Thai SME owner can estimate corporate income tax, get intelligent flags on non-deductible expenses, and see a unified tax summary dashboard
@@ -93,6 +93,6 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Thai Foundation + VAT Compliance | 5/5 | Complete | 2026-03-23 |
-| 2. WHT + Tax Invoices + Filing Deadlines | 0/5 | Planned | - |
+| 2. WHT + Tax Invoices + Filing Deadlines | 5/5 | Complete   | 2026-03-23 |
 | 3. CIT + Tax Intelligence + Dashboard | 0/2 | Not started | - |
 | 4. Export + Interoperability | 0/1 | Not started | - |
