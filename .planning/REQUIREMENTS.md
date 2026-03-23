@@ -48,8 +48,8 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Tax Invoice Management (INV)
 
-- [ ] **INV-01**: Create Thai tax invoices (ใบกำกับภาษี) with all 8 required fields per Section 86/4
-- [ ] **INV-02**: Sequential document numbering per document type
+- [x] **INV-01**: Create Thai tax invoices (ใบกำกับภาษี) with all 8 required fields per Section 86/4
+- [x] **INV-02**: Sequential document numbering per document type
 - [ ] **INV-03**: Credit note and debit note creation for invoice corrections
 - [x] **INV-04**: Contact/vendor management with Tax ID and branch number storage
 
@@ -136,8 +136,8 @@ Deferred to future release. Tracked but not in current roadmap.
 | CIT-01 | Phase 3 | Pending |
 | CIT-02 | Phase 3 | Pending |
 | CIT-03 | Phase 3 | Pending |
-| INV-01 | Phase 2 | Pending |
-| INV-02 | Phase 2 | Pending |
+| INV-01 | Phase 2 | Complete |
+| INV-02 | Phase 2 | Complete |
 | INV-03 | Phase 3 | Pending |
 | INV-04 | Phase 2 | Complete |
 | FILE-01 | Phase 2 | Complete |

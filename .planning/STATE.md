@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 02-02-PLAN.md
-last_updated: "2026-03-23T14:37:18.996Z"
+stopped_at: Completed 02-04-PLAN.md
+last_updated: "2026-03-23T14:40:27.174Z"
 progress:
   total_phases: 4
   completed_phases: 1
   total_plans: 10
-  completed_plans: 7
+  completed_plans: 8
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-23)
 ## Current Position
 
 Phase: 02 (wht-tax-invoices-filing-deadlines) — EXECUTING
-Plan: 3 of 5
+Plan: 4 of 5
 
 ## Performance Metrics
 
@@ -53,6 +53,7 @@ Plan: 3 of 5
 | Phase 01 P05 | 17min | 3 tasks | 19 files |
 | Phase 02 P01 | 8min | 2 tasks | 12 files |
 | Phase 02 P02 | 4min | 2 tasks | 3 files |
+| Phase 02 P04 | 6min | 2 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -81,6 +82,8 @@ Recent decisions affecting current work:
 - [Phase 02]: Holiday data is year-keyed via getHolidaysForYear -- adding years needs only a new case
 - [Phase 02]: WHT section only shown for expense transactions; WHT amount auto-computed from subtotal
 - [Phase 02]: No changes to ai/schema.ts -- fieldsToJsonSchema auto-includes fields with llm_prompt
+- [Phase 02]: Sequential numbering uses Setting model with parseInt pattern in prisma.$transaction (String-safe)
+- [Phase 02]: Invoice data stored in AppData model for PDF regeneration (key: tax-invoice-{docNumber})
 
 ### Pending Todos
 
@@ -94,6 +97,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-23T14:37:18.994Z
-Stopped at: Completed 02-02-PLAN.md
+Last session: 2026-03-23T14:40:27.172Z
+Stopped at: Completed 02-04-PLAN.md
 Resume file: None
