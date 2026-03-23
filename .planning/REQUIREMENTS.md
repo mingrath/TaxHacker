@@ -9,9 +9,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Thai Localization (I18N)
 
-- [ ] **I18N-01**: UI displays in Thai with official Revenue Department tax terminology
-- [ ] **I18N-02**: Buddhist Era (พ.ศ.) date display alongside Gregorian dates
-- [ ] **I18N-03**: Thai number/currency formatting (฿ prefix, comma separators, 2 decimal places)
+- [x] **I18N-01**: UI displays in Thai with official Revenue Department tax terminology
+- [x] **I18N-02**: Buddhist Era (พ.ศ.) date display alongside Gregorian dates
+- [x] **I18N-03**: Thai number/currency formatting (฿ prefix, comma separators, 2 decimal places)
 - [x] **I18N-04**: Thai font support in all generated PDF documents (THSarabunNew)
 
 ### AI Receipt Scanning (SCAN)
@@ -24,8 +24,8 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### VAT Compliance (VAT)
 
-- [ ] **VAT-01**: Track input VAT (ภาษีซื้อ) and output VAT (ภาษีขาย) per transaction
-- [ ] **VAT-02**: Auto-calculate 7% VAT with correct base amount (pre-VAT from /107 formula when price includes VAT)
+- [x] **VAT-01**: Track input VAT (ภาษีซื้อ) and output VAT (ภาษีขาย) per transaction
+- [x] **VAT-02**: Auto-calculate 7% VAT with correct base amount (pre-VAT from /107 formula when price includes VAT)
 - [ ] **VAT-03**: Auto-detect VAT registration requirement based on revenue threshold (1.8M baht)
 - [ ] **VAT-04**: Generate Purchase Tax Report (รายงานภาษีซื้อ) with all required columns
 - [ ] **VAT-05**: Generate Sales Tax Report (รายงานภาษีขาย) with all required columns
@@ -73,7 +73,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **BIZ-01**: Business profile with company name, Tax ID, branch, address (Thai)
 - [x] **BIZ-02**: VAT registration status toggle (registered/not registered) — controls which features are active
 - [x] **BIZ-03**: Accounting period configuration (calendar year default)
-- [ ] **BIZ-04**: Base currency set to THB with multi-currency support for foreign transactions
+- [x] **BIZ-04**: Base currency set to THB with multi-currency support for foreign transactions
 
 ## v2 Requirements
 
@@ -112,17 +112,17 @@ Deferred to future release. Tracked but not in current roadmap.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| I18N-01 | Phase 1 | Pending |
-| I18N-02 | Phase 1 | Pending |
-| I18N-03 | Phase 1 | Pending |
+| I18N-01 | Phase 1 | Complete |
+| I18N-02 | Phase 1 | Complete |
+| I18N-03 | Phase 1 | Complete |
 | I18N-04 | Phase 1 | Complete |
 | SCAN-01 | Phase 1 | Pending |
 | SCAN-02 | Phase 1 | Pending |
 | SCAN-03 | Phase 1 | Pending |
 | SCAN-04 | Phase 2 | Pending |
 | SCAN-05 | Phase 3 | Pending |
-| VAT-01 | Phase 1 | Pending |
-| VAT-02 | Phase 1 | Pending |
+| VAT-01 | Phase 1 | Complete |
+| VAT-02 | Phase 1 | Complete |
 | VAT-03 | Phase 1 | Pending |
 | VAT-04 | Phase 1 | Pending |
 | VAT-05 | Phase 1 | Pending |
@@ -152,7 +152,7 @@ Deferred to future release. Tracked but not in current roadmap.
 | BIZ-01 | Phase 1 | Complete |
 | BIZ-02 | Phase 1 | Complete |
 | BIZ-03 | Phase 1 | Complete |
-| BIZ-04 | Phase 1 | Pending |
+| BIZ-04 | Phase 1 | Complete |
 
 **Coverage:**
 - v1 requirements: 41 total

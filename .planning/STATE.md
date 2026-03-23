@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 01-02-PLAN.md
-last_updated: "2026-03-23T11:31:27.884Z"
+stopped_at: Completed 01-01-PLAN.md
+last_updated: "2026-03-23T11:32:55.717Z"
 progress:
   total_phases: 4
   completed_phases: 0
   total_plans: 5
-  completed_plans: 1
+  completed_plans: 2
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-23)
 ## Current Position
 
 Phase: 01 (thai-foundation-vat-compliance) — EXECUTING
-Plan: 2 of 5
+Plan: 3 of 5
 
 ## Performance Metrics
 
@@ -47,6 +47,7 @@ Plan: 2 of 5
 
 *Updated after each plan completion*
 | Phase 01 P02 | 7min | 2 tasks | 13 files |
+| Phase 01 P01 | 9min | 2 tasks | 15 files |
 
 ## Accumulated Context
 
@@ -59,6 +60,9 @@ Recent decisions affecting current work:
 - Phase order follows tax obligation frequency: monthly VAT first, then WHT, then annual CIT, then exports
 - [Phase 01]: Created business-profile model/schema inline for parallel execution (Plan 01 not yet complete)
 - [Phase 01]: THSarabunNew font from SIPA via nscimysci GitHub repo (open-source, free for commercial use)
+- [Phase 01]: Vitest chosen as test framework (ESM-native, fast, works with path aliases)
+- [Phase 01]: Business profile stored in Settings model with biz_ prefix codes (not new User columns)
+- [Phase 01]: Old vat_rate/vat extra fields removed from defaults -- replaced by first-class Prisma columns
 
 ### Pending Todos
 
@@ -72,6 +76,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-23T11:31:27.882Z
-Stopped at: Completed 01-02-PLAN.md
+Last session: 2026-03-23T11:32:55.715Z
+Stopped at: Completed 01-01-PLAN.md
 Resume file: None
