@@ -28,7 +28,7 @@ export async function StatsWidget({ filters }: { filters: TransactionFilters }) 
   return (
     <div className="flex flex-col gap-5">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">Overview</h2>
+        <h2 className="text-2xl font-bold">{"\u0e20\u0e32\u0e1e\u0e23\u0e27\u0e21"}</h2>
 
         <FiltersWidget defaultFilters={filters} defaultRange="last-12-months" />
       </div>
@@ -39,7 +39,7 @@ export async function StatsWidget({ filters }: { filters: TransactionFilters }) 
         <Link href="/transactions?type=income">
           <Card className="bg-gradient-to-br from-white via-green-50/30 to-emerald-50/40 border-green-200/50 hover:shadow-lg transition-all duration-300 hover:scale-[1.02] cursor-pointer">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Income</CardTitle>
+              <CardTitle className="text-sm font-medium">{"\u0e23\u0e32\u0e22\u0e23\u0e31\u0e1a"}</CardTitle>
               <ArrowUp className="h-4 w-4 text-green-500" />
             </CardHeader>
             <CardContent>
@@ -58,7 +58,7 @@ export async function StatsWidget({ filters }: { filters: TransactionFilters }) 
         <Link href="/transactions?type=expense">
           <Card className="bg-gradient-to-br from-white via-red-50/30 to-rose-50/40 border-red-200/50 hover:shadow-lg transition-all duration-300 hover:scale-[1.02] cursor-pointer">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Expenses</CardTitle>
+              <CardTitle className="text-sm font-medium">{"\u0e23\u0e32\u0e22\u0e08\u0e48\u0e32\u0e22"}</CardTitle>
               <ArrowDown className="h-4 w-4 text-red-500" />
             </CardHeader>
             <CardContent>
@@ -74,7 +74,7 @@ export async function StatsWidget({ filters }: { filters: TransactionFilters }) 
         <Link href="/transactions">
           <Card className="bg-gradient-to-br from-white via-pink-50/30 to-indigo-50/40 border-pink-200/50 hover:shadow-lg transition-all duration-300 hover:scale-[1.02] cursor-pointer">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Net Profit</CardTitle>
+              <CardTitle className="text-sm font-medium">{"\u0e01\u0e33\u0e44\u0e23"}</CardTitle>
               <BicepsFlexed className="h-4 w-4" />
             </CardHeader>
             <CardContent>
@@ -95,7 +95,7 @@ export async function StatsWidget({ filters }: { filters: TransactionFilters }) 
         <Link href="/transactions">
           <Card className="bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/40 border-blue-200/50 hover:shadow-lg transition-all duration-300 hover:scale-[1.02] cursor-pointer">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Processed Transactions</CardTitle>
+              <CardTitle className="text-sm font-medium">{"\u0e23\u0e32\u0e22\u0e01\u0e32\u0e23\u0e17\u0e31\u0e49\u0e07\u0e2b\u0e21\u0e14"}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats.invoicesProcessed}</div>
@@ -105,7 +105,7 @@ export async function StatsWidget({ filters }: { filters: TransactionFilters }) 
       </div>
 
       <div>
-        <h2 className="text-2xl font-bold">Projects</h2>
+        <h2 className="text-2xl font-bold">{"\u0e42\u0e1b\u0e23\u0e40\u0e08\u0e01\u0e15\u0e4c"}</h2>
       </div>
 
       <ProjectsWidget projects={projects} statsPerProject={statsPerProject} />
