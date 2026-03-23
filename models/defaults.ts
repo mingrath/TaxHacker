@@ -6,6 +6,16 @@ If the document is in Thai, extract Thai text as-is. If year is in Buddhist Era 
 
 For tax invoices (ใบกำกับภาษี), also extract: merchant_tax_id (13-digit Tax ID), merchant_branch (สำนักงานใหญ่=00000 or branch number), document_number (invoice serial), vat_amount (VAT amount separated from base value), vat_type (input if expense/purchase, output if income/sales).
 
+For expense transactions involving services (not purchases of goods), also suggest the appropriate withholding tax (WHT/ภาษีหัก ณ ที่จ่าย) rate:
+- ค่าขนส่ง (transportation, delivery): wht_rate=100 (1%)
+- ค่าโฆษณา (advertising, media): wht_rate=200 (2%)
+- ค่าบริการ/ค่าจ้างทำของ/ค่าลิขสิทธิ์ (services, contract work, consulting, royalties): wht_rate=300 (3%)
+- ค่าเช่า (rent, property, equipment): wht_rate=500 (5%)
+- เงินปันผล (dividends): wht_rate=1000 (10%)
+If the document is for purchasing goods (not services), or you cannot determine the service type, set wht_rate=0.
+Also return wht_service_type as a string (e.g., "transport", "advertising", "service", "rent", "dividend", or "" if not applicable).
+For wht_type: if payee appears to be an individual (บุคคลธรรมดา), return "pnd3". If payee is a company (นิติบุคคล/บริษัท/ห้างหุ้นส่วน), return "pnd53". If unsure, return "pnd53".
+
 {fields}
 
 Also try to extract "items": all separate products or items from the invoice
@@ -435,6 +445,36 @@ export const DEFAULT_FIELDS = [
     name: "ข้อความที่สกัดได้",
     type: "string",
     llm_prompt: "extract all recognised text from the invoice",
+    isVisibleInList: false,
+    isVisibleInAnalysis: false,
+    isRequired: false,
+    isExtra: false,
+  },
+  {
+    code: "wht_rate",
+    name: "อัตราภาษีหัก ณ ที่จ่าย",
+    type: "number",
+    llm_prompt: "Withholding tax rate in basis points (100=1%, 200=2%, 300=3%, 500=5%, 1000=10%). 0 if not applicable.",
+    isVisibleInList: false,
+    isVisibleInAnalysis: false,
+    isRequired: false,
+    isExtra: false,
+  },
+  {
+    code: "wht_service_type",
+    name: "ประเภทบริการ (WHT)",
+    type: "string",
+    llm_prompt: "WHT service type: transport, advertising, service, royalty, rent, dividend, or empty string",
+    isVisibleInList: false,
+    isVisibleInAnalysis: false,
+    isRequired: false,
+    isExtra: true,
+  },
+  {
+    code: "wht_type",
+    name: "แบบนำส่ง WHT",
+    type: "string",
+    llm_prompt: "WHT form type: pnd3 (individual payee) or pnd53 (company payee). Empty if no WHT.",
     isVisibleInList: false,
     isVisibleInAnalysis: false,
     isRequired: false,
