@@ -85,7 +85,7 @@ Plans:
 
 Plans:
 - [x] 04-01-PLAN.md -- Export services: RD pipe-delimited TXT, FlowAccount CSV, accountant Excel with ExcelJS
-- [ ] 04-02-PLAN.md -- Wire export buttons to report pages + export data page UI
+- [x] 04-02-PLAN.md -- Wire export buttons to report pages + export data page UI
 
 ## Progress
 

@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 04-01-PLAN.md
-last_updated: "2026-03-24T02:11:34.962Z"
+stopped_at: Completed 04-02-PLAN.md -- FINAL PLAN of BanChee project
+last_updated: "2026-03-24T02:24:35.682Z"
 progress:
   total_phases: 4
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 15
-  completed_plans: 14
+  completed_plans: 15
 ---
 
 # Project State
@@ -59,6 +59,7 @@ Plan: 2 of 2
 | Phase 03 P01 | 11min | 2 tasks | 14 files |
 | Phase 03 P03 | 3min | 2 tasks | 3 files |
 | Phase 04 P01 | 7min | 2 tasks | 8 files |
+| Phase 04 P02 | 9min | 2 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -100,6 +101,8 @@ Recent decisions affecting current work:
 - [Phase 04]: Export services are pure transformation functions: data-in, file-buffer/string-out, no database access
 - [Phase 04]: satangToBaht returns string for TXT/CSV exports, numeric for Excel (ExcelJS handles formatting)
 - [Phase 04]: ExcelJS writeBuffer returns ArrayBuffer, wrapped in Buffer.from() for Node.js compat
+- [Phase 04]: Extracted getVATReportData/getWHTReportData as shared helpers for reuse across report and export actions
+- [Phase 04]: Export content transported as string/base64 through server actions, client-side Blob triggers browser download
 
 ### Pending Todos
 
@@ -113,6 +116,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-24T02:11:34.959Z
-Stopped at: Completed 04-01-PLAN.md
+Last session: 2026-03-24T02:24:35.680Z
+Stopped at: Completed 04-02-PLAN.md -- FINAL PLAN of BanChee project
 Resume file: None
