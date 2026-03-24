@@ -42,7 +42,7 @@ export default async function SelfHostedWelcomePage() {
   return (
     <Card className="w-full max-w-xl mx-auto p-8 flex flex-col items-center justify-center gap-4">
       <div className="flex flex-col items-center gap-2">
-        <div className="text-6xl">📋</div>
+        <Image src="/logo/512.png" alt="BanChee Logo" width={144} height={144} className="w-36 h-36 rounded-2xl" />
         <CardTitle className="text-3xl font-bold">
           <ColoredText>BanChee (บัญชี)</ColoredText>
         </CardTitle>
