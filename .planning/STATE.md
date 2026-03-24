@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Phase 4 context gathered
-last_updated: "2026-03-24T00:38:29.227Z"
+stopped_at: Completed 04-01-PLAN.md
+last_updated: "2026-03-24T02:11:34.962Z"
 progress:
   total_phases: 4
   completed_phases: 3
-  total_plans: 13
-  completed_plans: 13
+  total_plans: 15
+  completed_plans: 14
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-23)
 
 **Core value:** A Thai SME owner can snap a receipt, have AI handle the rest, and generate monthly tax filings in 5 minutes -- zero accountant needed, zero tax penalties.
-**Current focus:** Phase 03 — cit-tax-intelligence-dashboard
+**Current focus:** Phase 04 — export-interoperability
 
 ## Current Position
 
-Phase: 4
-Plan: Not started
+Phase: 04 (export-interoperability) — EXECUTING
+Plan: 2 of 2
 
 ## Performance Metrics
 
@@ -58,6 +58,7 @@ Plan: Not started
 | Phase 02 P05 | 25min | 3 tasks | 5 files |
 | Phase 03 P01 | 11min | 2 tasks | 14 files |
 | Phase 03 P03 | 3min | 2 tasks | 3 files |
+| Phase 04 P01 | 7min | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -96,6 +97,9 @@ Recent decisions affecting current work:
 - [Phase 03]: Non-deductible validator uses heuristic-first pattern: category+keyword checks override AI flags
 - [Phase 03]: paidUpCapital stored in satang in Settings model, form input in baht with *100 conversion
 - [Phase 03]: Inline div-based progress bar for cap tracking instead of shadcn Progress for full color customization
+- [Phase 04]: Export services are pure transformation functions: data-in, file-buffer/string-out, no database access
+- [Phase 04]: satangToBaht returns string for TXT/CSV exports, numeric for Excel (ExcelJS handles formatting)
+- [Phase 04]: ExcelJS writeBuffer returns ArrayBuffer, wrapped in Buffer.from() for Node.js compat
 
 ### Pending Todos
 
@@ -109,6 +113,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-24T00:38:29.217Z
-Stopped at: Phase 4 context gathered
-Resume file: .planning/phases/04-export-interoperability/04-CONTEXT.md
+Last session: 2026-03-24T02:11:34.959Z
+Stopped at: Completed 04-01-PLAN.md
+Resume file: None
