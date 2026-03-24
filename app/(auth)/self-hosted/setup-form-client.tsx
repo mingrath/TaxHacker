@@ -32,7 +32,7 @@ export default function SelfHostedSetupFormClient({ defaultProvider, defaultApiK
     <form action={selfHostedGetStartedAction} className="flex flex-col gap-8 pt-8">
       <div className="flex flex-row gap-4 items-center justify-center">
         <FormSelect
-          title="LLM provider"
+          title="ผู้ให้บริการ AI"
           name="provider"
           value={provider}
           onValueChange={setProvider}
@@ -43,9 +43,9 @@ export default function SelfHostedSetupFormClient({ defaultProvider, defaultApiK
           }))}
         />
         <FormSelectCurrency
-          title="Default Currency"
+          title="สกุลเงินหลัก"
           name="default_currency"
-          defaultValue={DEFAULT_SETTINGS.find((s) => s.code === "default_currency")?.value ?? "EUR"}
+          defaultValue={DEFAULT_SETTINGS.find((s) => s.code === "default_currency")?.value ?? "THB"}
           currencies={DEFAULT_CURRENCIES}
         />
       </div>
@@ -61,7 +61,7 @@ export default function SelfHostedSetupFormClient({ defaultProvider, defaultApiK
           placeholder={selected.placeholder}
         />
         <small className="text-xs text-muted-foreground flex justify-center mt-2">
-          Get key from
+          รับ API Key จาก
           {"\u00A0"}
           <a href={selected.help.url} target="_blank" className="underline">
             {selected.help.label}
@@ -69,7 +69,7 @@ export default function SelfHostedSetupFormClient({ defaultProvider, defaultApiK
         </small>
       </div>
       <Button type="submit" className="w-auto p-6">
-        Get Started
+        เริ่มใช้งาน BanChee
       </Button>
     </form>
   )
