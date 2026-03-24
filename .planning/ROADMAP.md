@@ -81,10 +81,11 @@ Plans:
   1. User can export PP30, PND3, and PND53 data in Revenue Department-compatible format ready for upload to rd.go.th e-filing system
   2. User can export transaction data in FlowAccount-compatible CSV format for import into FlowAccount
   3. User can export data in standard Thai accountant Excel format suitable for handoff to an external accountant
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 04-01: TBD
+- [ ] 04-01-PLAN.md -- Export services: RD pipe-delimited TXT, FlowAccount CSV, accountant Excel with ExcelJS
+- [ ] 04-02-PLAN.md -- Wire export buttons to report pages + export data page UI
 
 ## Progress
 
@@ -96,4 +97,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 | 1. Thai Foundation + VAT Compliance | 5/5 | Complete | 2026-03-23 |
 | 2. WHT + Tax Invoices + Filing Deadlines | 5/5 | Complete   | 2026-03-23 |
 | 3. CIT + Tax Intelligence + Dashboard | 0/3 | Not started | - |
-| 4. Export + Interoperability | 0/1 | Not started | - |
+| 4. Export + Interoperability | 0/2 | Not started | - |
