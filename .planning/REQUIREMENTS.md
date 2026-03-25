@@ -1,0 +1,112 @@
+# Requirements: BanChee (บัญชี)
+
+**Defined:** 2026-03-25
+**Core Value:** A Thai SME owner can snap a receipt, have AI handle the rest, and generate monthly tax filings in 5 minutes — zero accountant needed, zero tax penalties.
+
+## v1.1 Requirements
+
+Requirements for v1.1 Document Workflow milestone. Each maps to roadmap phases.
+
+### Quotation System (QUOT)
+
+- [ ] **QUOT-01**: User can create a quotation with line items (description, quantity, unit, unit price, amount) and contact selection
+- [ ] **QUOT-02**: Quotation uses sequential numbering (QT-YYMM-NNN) with configurable prefix
+- [ ] **QUOT-03**: Quotation stores validity period (default 30 days) and payment terms
+- [ ] **QUOT-04**: User can generate quotation PDF with THSarabunNew (company header, line items table, totals, signature area)
+- [ ] **QUOT-05**: User can view all quotations in a list with status badges (draft/sent/accepted/expired/converted)
+- [ ] **QUOT-06**: User can convert accepted quotation to tax invoice with one click (pre-fills all data, marks quotation as converted)
+
+### Document Workflow (DOC)
+
+- [ ] **DOC-01**: New Document Prisma model with status tracking, line items JSON, and sourceDocumentId for chain linking
+- [ ] **DOC-02**: User can create an invoice/billing note (ใบแจ้งหนี้) — standalone or converted from quotation
+- [ ] **DOC-03**: User can create a receipt (ใบเสร็จรับเงิน) linked to an invoice, recording payment date and method
+- [ ] **DOC-04**: User can create a delivery note (ใบส่งของ) linked to a quotation or invoice
+- [ ] **DOC-05**: Document conversion is immutable — creates new record, never mutates source document
+- [ ] **DOC-06**: Each document type has its own PDF template with THSarabunNew and Section 86/4 compliance where applicable
+- [ ] **DOC-07**: Status transitions follow explicit state machine (e.g., quotation: draft→sent→accepted→converted; invoice: draft→sent→paid→overdue)
+- [ ] **DOC-08**: User can view all documents in a unified list with type and status filters
+
+### Bank Reconciliation (BANK)
+
+- [ ] **BANK-01**: User can import bank statements from CSV or Excel files with flexible column mapping UI
+- [ ] **BANK-02**: System handles Thai bank CSV variations (TIS-620 encoding, Buddhist Era dates, inconsistent column positions)
+- [ ] **BANK-03**: Auto-matching uses multi-factor scoring: amount (exact match) + date proximity + description similarity
+- [ ] **BANK-04**: User can review matched pairs in side-by-side UI: confirm, reject, or manually match
+- [ ] **BANK-05**: Unmatched bank entries can create new transactions directly from the reconciliation view
+- [ ] **BANK-06**: Reconciliation status tracked per statement (imported/in-progress/reconciled)
+
+### Ship-Ready Polish (SHIP)
+
+- [ ] **SHIP-01**: README.md rewritten from TaxHacker to BanChee — Thai + English, installation guide, feature overview, screenshots
+- [ ] **SHIP-02**: Docker production build verified end-to-end (build → migrate → seed → serve)
+- [ ] **SHIP-03**: Visual QA with real Thai receipts — AI extraction accuracy, PDF font rendering, report downloads
+
+## v2 Requirements
+
+Deferred to future release. Tracked but not in current roadmap.
+
+### e-Tax Invoice
+
+- **ETAX-01**: Generate e-Tax Invoice in PDF/A-3 format with digital signature
+- **ETAX-02**: Integration with Revenue Department e-Tax Invoice by Email system
+- **ETAX-03**: XML generation per ETDA standard 3-2560
+
+### Advanced Features
+
+- **ADV-01**: PND1 employee withholding tax management
+- **ADV-02**: Multi-user access with owner/bookkeeper roles
+- **ADV-03**: Cloud SaaS deployment option (multi-tenant)
+- **ADV-04**: LINE/SMS notification for filing deadlines
+- **ADV-05**: Combined tax invoice/receipt (ใบกำกับภาษี/ใบเสร็จรับเงิน) for retail
+- **ADV-06**: Purchase order (ใบสั่งซื้อ) management
+
+## Out of Scope
+
+| Feature | Reason |
+|---------|--------|
+| Full double-entry general ledger | Adds complexity non-accountant users don't need |
+| Direct bank API integration | Requires bank partnerships (PEAK has KTB deal); CSV import sufficient for self-hosted |
+| PDF bank statement parsing | Thai bank PDFs are inconsistent; CSV/Excel is the pragmatic path |
+| Inventory/stock management | Different domain, not tax-related |
+| Payroll / PND1 | Different domain, deferred to v2 |
+| Fuzzy matching library (Fuse.js) | Exact amount + date range handles 90%+; LLM pipeline covers edge cases |
+| XState for workflow | 4-5 states with simple transitions; 20 lines of TypeScript replaces a 15kB library |
+| OFX bank format parser | Thai banks don't export OFX; CSV and Excel are the actual formats |
+
+## Traceability
+
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| QUOT-01 | TBD | Pending |
+| QUOT-02 | TBD | Pending |
+| QUOT-03 | TBD | Pending |
+| QUOT-04 | TBD | Pending |
+| QUOT-05 | TBD | Pending |
+| QUOT-06 | TBD | Pending |
+| DOC-01 | TBD | Pending |
+| DOC-02 | TBD | Pending |
+| DOC-03 | TBD | Pending |
+| DOC-04 | TBD | Pending |
+| DOC-05 | TBD | Pending |
+| DOC-06 | TBD | Pending |
+| DOC-07 | TBD | Pending |
+| DOC-08 | TBD | Pending |
+| BANK-01 | TBD | Pending |
+| BANK-02 | TBD | Pending |
+| BANK-03 | TBD | Pending |
+| BANK-04 | TBD | Pending |
+| BANK-05 | TBD | Pending |
+| BANK-06 | TBD | Pending |
+| SHIP-01 | TBD | Pending |
+| SHIP-02 | TBD | Pending |
+| SHIP-03 | TBD | Pending |
+
+**Coverage:**
+- v1.1 requirements: 23 total
+- Mapped to phases: 0 (pending roadmap)
+- Unmapped: 23
+
+---
+*Requirements defined: 2026-03-25*
+*Last updated: 2026-03-25 after initial definition*
