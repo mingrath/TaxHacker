@@ -78,35 +78,35 @@ Deferred to future release. Tracked but not in current roadmap.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| QUOT-01 | TBD | Pending |
-| QUOT-02 | TBD | Pending |
-| QUOT-03 | TBD | Pending |
-| QUOT-04 | TBD | Pending |
-| QUOT-05 | TBD | Pending |
-| QUOT-06 | TBD | Pending |
-| DOC-01 | TBD | Pending |
-| DOC-02 | TBD | Pending |
-| DOC-03 | TBD | Pending |
-| DOC-04 | TBD | Pending |
-| DOC-05 | TBD | Pending |
-| DOC-06 | TBD | Pending |
-| DOC-07 | TBD | Pending |
-| DOC-08 | TBD | Pending |
-| BANK-01 | TBD | Pending |
-| BANK-02 | TBD | Pending |
-| BANK-03 | TBD | Pending |
-| BANK-04 | TBD | Pending |
-| BANK-05 | TBD | Pending |
-| BANK-06 | TBD | Pending |
-| SHIP-01 | TBD | Pending |
-| SHIP-02 | TBD | Pending |
-| SHIP-03 | TBD | Pending |
+| QUOT-01 | Phase 5 | Pending |
+| QUOT-02 | Phase 5 | Pending |
+| QUOT-03 | Phase 5 | Pending |
+| QUOT-04 | Phase 5 | Pending |
+| QUOT-05 | Phase 5 | Pending |
+| QUOT-06 | Phase 6 | Pending |
+| DOC-01 | Phase 5 | Pending |
+| DOC-02 | Phase 6 | Pending |
+| DOC-03 | Phase 6 | Pending |
+| DOC-04 | Phase 6 | Pending |
+| DOC-05 | Phase 6 | Pending |
+| DOC-06 | Phase 6 | Pending |
+| DOC-07 | Phase 5 | Pending |
+| DOC-08 | Phase 6 | Pending |
+| BANK-01 | Phase 7 | Pending |
+| BANK-02 | Phase 7 | Pending |
+| BANK-03 | Phase 7 | Pending |
+| BANK-04 | Phase 7 | Pending |
+| BANK-05 | Phase 7 | Pending |
+| BANK-06 | Phase 7 | Pending |
+| SHIP-01 | Phase 8 | Pending |
+| SHIP-02 | Phase 8 | Pending |
+| SHIP-03 | Phase 8 | Pending |
 
 **Coverage:**
 - v1.1 requirements: 23 total
-- Mapped to phases: 0 (pending roadmap)
-- Unmapped: 23
+- Mapped to phases: 23
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-25*
-*Last updated: 2026-03-25 after initial definition*
+*Last updated: 2026-03-25 after roadmap creation (traceability complete)*
