@@ -2,9 +2,9 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: unknown
-stopped_at: Completed 04-02-PLAN.md -- FINAL PLAN of BanChee project
-last_updated: "2026-03-24T02:29:19.805Z"
+status: milestone_complete
+stopped_at: v1.0 milestone archived
+last_updated: "2026-03-25T12:23:42.426Z"
 progress:
   total_phases: 4
   completed_phases: 4
@@ -16,7 +16,10 @@ progress:
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-23)
+See: .planning/PROJECT.md (updated 2026-03-25)
+
+**Core value:** A Thai SME owner can snap a receipt, have AI handle the rest, and generate monthly tax filings in 5 minutes.
+**Current focus:** v1.0 complete — planning next milestone
 
 **Core value:** A Thai SME owner can snap a receipt, have AI handle the rest, and generate monthly tax filings in 5 minutes -- zero accountant needed, zero tax penalties.
 **Current focus:** Phase 04 — export-interoperability
