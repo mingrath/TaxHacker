@@ -56,3 +56,9 @@ pgdata
 *.db-journal
 # Sentry Config File
 .env.sentry-build-plugin
+
+# local dev overrides
+docker-compose.override.yml
+
+# handoff files
+handoff-*.md
