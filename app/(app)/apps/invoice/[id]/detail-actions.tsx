@@ -14,6 +14,8 @@ import { createElement, startTransition, useActionState, useCallback, useEffect,
 import { pdf } from "@react-pdf/renderer"
 import { InvoicePDF } from "../components/invoice-pdf"
 import { updateInvoiceStatusAction } from "../actions"
+import { createReceiptFromInvoiceAction } from "../../receipt/actions"
+import { createDeliveryNoteFromSourceAction } from "../../delivery-note/actions"
 import { canTransition } from "@/services/document-workflow"
 import type { InvoiceData } from "../actions"
 import { toast } from "sonner"
@@ -178,17 +180,12 @@ export function InvoiceDetailActions({
 
       {/* Conversion: Create Receipt */}
       {showReceiptButton && (
-        <form action="/apps/receipt" method="GET">
+        <form action={createReceiptFromInvoiceAction as any}>
           <input type="hidden" name="sourceDocumentId" value={documentId} />
           <Button
             type="submit"
             variant="default"
             disabled={isPending}
-            onClick={(e) => {
-              // Placeholder: will be replaced with actual conversion action in Plan 03
-              e.preventDefault()
-              toast.info("\u0e2a\u0e23\u0e49\u0e32\u0e07\u0e43\u0e1a\u0e40\u0e2a\u0e23\u0e47\u0e08 -- \u0e1f\u0e31\u0e07\u0e01\u0e4c\u0e0a\u0e31\u0e19\u0e19\u0e35\u0e49\u0e08\u0e30\u0e1e\u0e23\u0e49\u0e2d\u0e21\u0e43\u0e0a\u0e49\u0e07\u0e32\u0e19\u0e43\u0e19 Plan 03")
-            }}
           >
             <FileText className="h-4 w-4 mr-2" />
             {"\u0e2a\u0e23\u0e49\u0e32\u0e07\u0e43\u0e1a\u0e40\u0e2a\u0e23\u0e47\u0e08"}
@@ -198,17 +195,12 @@ export function InvoiceDetailActions({
 
       {/* Conversion: Create Delivery Note */}
       {showDeliveryButton && (
-        <form action="/apps/delivery-note" method="GET">
+        <form action={createDeliveryNoteFromSourceAction as any}>
           <input type="hidden" name="sourceDocumentId" value={documentId} />
           <Button
             type="submit"
             variant="outline"
             disabled={isPending}
-            onClick={(e) => {
-              // Placeholder: will be replaced with actual conversion action in Plan 03
-              e.preventDefault()
-              toast.info("\u0e2a\u0e23\u0e49\u0e32\u0e07\u0e43\u0e1a\u0e2a\u0e48\u0e07\u0e02\u0e2d\u0e07 -- \u0e1f\u0e31\u0e07\u0e01\u0e4c\u0e0a\u0e31\u0e19\u0e19\u0e35\u0e49\u0e08\u0e30\u0e1e\u0e23\u0e49\u0e2d\u0e21\u0e43\u0e0a\u0e49\u0e07\u0e32\u0e19\u0e43\u0e19 Plan 03")
-            }}
           >
             <Truck className="h-4 w-4 mr-2" />
             {"\u0e2a\u0e23\u0e49\u0e32\u0e07\u0e43\u0e1a\u0e2a\u0e48\u0e07\u0e02\u0e2d\u0e07"}
