@@ -25,7 +25,7 @@ Requirements for v1.1 Document Workflow milestone. Each maps to roadmap phases.
 - [x] **DOC-05**: Document conversion is immutable — creates new record, never mutates source document
 - [x] **DOC-06**: Each document type has its own PDF template with THSarabunNew and Section 86/4 compliance where applicable
 - [x] **DOC-07**: Status transitions follow explicit state machine (e.g., quotation: draft→sent→accepted→converted; invoice: draft→sent→paid→overdue)
-- [ ] **DOC-08**: User can view all documents in a unified list with type and status filters
+- [x] **DOC-08**: User can view all documents in a unified list with type and status filters
 
 ### Bank Reconciliation (BANK)
 
@@ -91,7 +91,7 @@ Deferred to future release. Tracked but not in current roadmap.
 | DOC-05 | Phase 6 | Complete |
 | DOC-06 | Phase 6 | Complete |
 | DOC-07 | Phase 5 | Complete |
-| DOC-08 | Phase 6 | Pending |
+| DOC-08 | Phase 6 | Complete |
 | BANK-01 | Phase 7 | Pending |
 | BANK-02 | Phase 7 | Pending |
 | BANK-03 | Phase 7 | Pending |

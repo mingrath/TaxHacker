@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Document Workflow
 status: unknown
-stopped_at: Completed 06-03-PLAN.md
-last_updated: "2026-03-26T05:19:22.918Z"
+stopped_at: Completed 06-04-PLAN.md
+last_updated: "2026-03-26T05:28:20.867Z"
 progress:
   total_phases: 4
   completed_phases: 1
   total_plans: 9
-  completed_plans: 7
+  completed_plans: 8
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-25)
 ## Current Position
 
 Phase: 06 (document-workflow-chain-conversions) — EXECUTING
-Plan: 4 of 5
+Plan: 5 of 5
 
 ## Performance Metrics
 
@@ -55,6 +55,7 @@ Plan: 4 of 5
 | Phase 06 P01 | 4min | 2 tasks | 7 files |
 | Phase 06 P02 | 12min | 2 tasks | 11 files |
 | Phase 06 P03 | 8min | 2 tasks | 14 files |
+| Phase 06 P04 | 6min | 2 tasks | 9 files |
 
 ## Accumulated Context
 
@@ -83,6 +84,9 @@ Recent decisions affecting current work:
 - [Phase 06]: Receipt defaults: payment_method=transfer, payment_date=today, paid_amount=full invoice total
 - [Phase 06]: Delivery note PDF strips ALL financial columns per D-18 (items only)
 - [Phase 06]: Void receipt recalculates parent invoice paid status via sumReceiptAmountsForInvoice
+- [Phase 06]: Client-side filtering for unified document list -- small dataset avoids server round-trips
+- [Phase 06]: Generic StatusBadge accepts optional statusMap prop, defaults to ALL_DOCUMENT_STATUSES
+- [Phase 06]: ChainBadges abbreviate doc numbers (QT-2568-0001 -> QT-0001) for compact display
 
 ### Pending Todos
 
@@ -96,6 +100,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-26T05:19:22.915Z
-Stopped at: Completed 06-03-PLAN.md
+Last session: 2026-03-26T05:28:20.864Z
+Stopped at: Completed 06-04-PLAN.md
 Resume file: None
