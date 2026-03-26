@@ -1,7 +1,7 @@
 "use client"
 
 import { Badge } from "@/components/ui/badge"
-import { QUOTATION_STATUSES } from "@/services/document-workflow"
+import { ALL_DOCUMENT_STATUSES } from "@/services/document-workflow"
 
 const STATUS_STYLES: Record<string, string> = {
   draft: "bg-secondary text-secondary-foreground",
@@ -10,11 +10,15 @@ const STATUS_STYLES: Record<string, string> = {
   rejected: "bg-destructive/10 text-destructive",
   expired: "bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300",
   converted: "bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300",
+  overdue: "bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300",
+  paid: "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300",
+  confirmed: "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300",
+  delivered: "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300",
   voided: "bg-muted text-muted-foreground",
 }
 
 export function StatusBadge({ status }: { status: string }) {
-  const statusInfo = QUOTATION_STATUSES[status as keyof typeof QUOTATION_STATUSES]
+  const statusInfo = ALL_DOCUMENT_STATUSES[status as keyof typeof ALL_DOCUMENT_STATUSES]
   const label = statusInfo?.label ?? status
   const className = STATUS_STYLES[status] ?? "bg-secondary text-secondary-foreground"
 
