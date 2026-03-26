@@ -1,194 +1,142 @@
 <div align="center"><a name="readme-top"></a>
 
-<img src="public/logo/512.png" alt="" width="320">
+<img src="public/logo/512.png" alt="BanChee Logo" width="320">
 
 <br>
 
-# TaxHacker — self-hosted AI accountant
+# BanChee (บัญชี) — AI-powered Thai SME tax accounting
 
-[![GitHub Stars](https://img.shields.io/github/stars/vas3k/TaxHacker?color=ffcb47&labelColor=black&style=flat-square)](https://github.com/vas3k/TaxHacker/stargazers)
-[![License](https://img.shields.io/badge/license-MIT-ffcb47?labelColor=black&style=flat-square)](https://github.com/vas3k/TaxHacker/blob/main/LICENSE)
-[![GitHub Issues](https://img.shields.io/github/issues/vas3k/TaxHacker?color=ff80eb&labelColor=black&style=flat-square)](https://github.com/vas3k/TaxHacker/issues)
-[![Donate](https://img.shields.io/badge/-Donate-f04f88?logo=githubsponsors&logoColor=white&style=flat-square)](https://vas3k.com/donate/)
+[![GitHub Stars](https://img.shields.io/github/stars/mingrath/banchee?color=ffcb47&labelColor=black&style=flat-square)](https://github.com/mingrath/banchee/stargazers)
+[![License](https://img.shields.io/badge/license-MIT-ffcb47?labelColor=black&style=flat-square)](https://github.com/mingrath/banchee/blob/main/LICENSE)
+[![GitHub Issues](https://img.shields.io/github/issues/mingrath/banchee?color=ff80eb&labelColor=black&style=flat-square)](https://github.com/mingrath/banchee/issues)
 
 </div>
 
-TaxHacker is a self-hosted accounting app designed for freelancers, indie hackers, and small businesses who want to save time and automate expense and income tracking using the power of modern AI.
+---
 
-Upload photos of receipts, invoices, or PDFs, and TaxHacker will automatically recognize and extract all the important data you need for accounting: product names, amounts, items, dates, merchants, taxes, and save it into a structured Excel-like database. You can even create custom fields with your own AI prompts to extract any specific information you need.
+## ภาษาไทย
 
-The app features automatic currency conversion (including crypto!) based on historical exchange rates from the transaction date. With built-in filtering, multi-project support, import/export capabilities, and custom categories, TaxHacker simplifies reporting and makes tax filing a bit easier.
+BanChee (บัญชี) คือแอปบัญชีอัจฉริยะแบบ Self-hosted สำหรับเจ้าของธุรกิจ SME ไทยที่ต้องการจัดการภาษีด้วยตัวเองโดยไม่ต้องจ้างสำนักงานบัญชี ถ่ายรูปใบเสร็จหรือใบแจ้งหนี้ แล้ว AI จะดึงข้อมูลทั้งหมดให้อัตโนมัติ -- คำนวณภาษีมูลค่าเพิ่ม ภาษีหัก ณ ที่จ่าย จัดหมวดหมู่ค่าใช้จ่าย ตรวจสอบรายจ่ายที่ไม่สามารถหักเป็นค่าใช้จ่ายได้ และสร้างรายงานพร้อมยื่นกรมสรรพากร ทั้งหมดเป็นภาษาไทย ใช้ศัพท์กรมสรรพากร ออกแบบมาให้ใช้ง่ายสำหรับคนที่ไม่ใช่นักบัญชี
 
-> 🎥 [Watch demo video](https://taxhacker.app/landing/video.mp4)
+BanChee ยังรองรับการสร้างเอกสารธุรกิจครบวงจร ตั้งแต่ใบเสนอราคา ใบแจ้งหนี้ ใบเสร็จรับเงิน ไปจนถึงใบกำกับภาษี พร้อมระบบนำเข้า Statement ธนาคารเพื่อตรวจสอบยอดบัญชี (Bank Reconciliation) ทำให้คุณจัดการบัญชีได้ครบจบในที่เดียว
 
-![Dashboard](public/landing/main-page.webp)
+ข้อมูลการเงินทั้งหมดเก็บอยู่ในเซิร์ฟเวอร์ของคุณเอง ไม่มีข้อมูลส่งออกไปภายนอก ปลอดภัยและเป็นส่วนตัว
 
-> \[!IMPORTANT]
->
-> This project is still in early development. Use at your own risk! **Star us** to get notified about new features and bugfixes ⭐️
+---
 
-## ✨ Features
+## English
 
-### `1` Analyze photos and invoices with AI
+BanChee is an AI-powered, self-hosted accounting app built for Thai SME owners who want to handle their own tax compliance without hiring an accountant. Upload a receipt or invoice photo, and BanChee extracts all data, calculates VAT and withholding tax, categorizes expenses, flags non-deductible items, and generates Revenue Department-ready reports and exports -- all in Thai, with a simple interface designed for non-accountants.
 
-![Currency Conversion](public/landing/ai-scanner-big.webp)
+BanChee also supports a complete business document workflow -- from quotation to invoice to receipt to tax invoice -- plus bank statement import and auto-reconciliation, so you can manage your entire accounting cycle in one place.
 
-Snap a photo of any receipt or upload an invoice PDF, and TaxHacker will automatically recognize, extract, categorize, and store all the information in a structured database.
+All financial data stays on your own server. No external analytics, no tracking, complete privacy.
 
-- **Upload and organize your docs**: Store multiple documents in "unsorted" until you're ready to process them manually or with AI assistance
-- **AI data extraction**: Use AI to automatically pull key information like dates, amounts, vendors, and line items
-- **Auto-categorization**: Transactions are automatically sorted into relevant categories based on their content
-- **Item splitting**: Extract individual items from invoices and split them into separate transactions when needed
-- **Structured storage**: Everything gets saved in an organized database for easy filtering and retrieval
-- **Customizable AI providers**: Choose from OpenAI, Google Gemini, or Mistral (local LLM support coming soon)
+---
 
-TaxHacker works with a wide variety of documents, including store receipts, restaurant bills, invoices, bank statements, letters, even handwritten receipts. It handles any language and any currency with ease.
+## Features
 
-### `2` Multi-currency support with automatic conversion (even crypto!)
+### v1.0 -- AI Tax Accounting
 
-![Currency Conversion](public/landing/multi-currency.webp)
+- **AI receipt/invoice scanning** -- Snap a photo or upload a PDF, AI extracts dates, amounts, vendors, items, and tax details automatically
+- **VAT calculation** -- Input/output VAT tracking with /107 formula, 1.8M registration threshold detection, PP30 monthly return
+- **Withholding tax (WHT)** -- 5-tier rate table, AI rate suggestion per service type, 50 Tawi certificate PDF, PND3/PND53 reports
+- **Corporate income tax (CIT)** -- SME tiered rates, PND50/PND51 estimation, entertainment 0.3% and charitable 2% cap tracking
+- **Tax invoice validation** -- Section 86/4 compliance (11 required fields), sequential numbering, credit/debit notes
+- **Non-deductible flagging** -- AI flags Section 65 tri items that cannot be deducted as expenses
+- **Filing deadlines** -- Dashboard with Thai holiday awareness, filing status tracker (pending/filed/overdue)
+- **Multi-format export** -- Revenue Department pipe-delimited TXT, FlowAccount CSV, Thai accountant Excel workbook
+- **Contact management** -- Tax ID, branch number, address for vendors and customers
+- **Multi-LLM support** -- OpenAI, Google Gemini, Mistral -- provider-agnostic, no vendor lock-in
+- **Thai UI** -- Revenue Department terminology, Buddhist Era dates, Thai number/currency formatting
+- **7-step setup wizard** -- Business profile configuration for new users
 
-TaxHacker automatically detects currencies in your documents and converts them to your base currency using historical exchange rates.
+### v1.1 -- Document Workflow & Bank Reconciliation
 
-- **Foreight currency detection**: Automatically identify the currency used in any document
-- **Historical rates**: Get conversion rates from the actual transaction date
-- **All-world coverage**: Support for 170+ world currencies and 14 popular cryptocurrencies (BTC, ETH, LTC, DOT, and more)
-- **Flexible input**: Manual entry is always available when you need more control
+- **Quotation (ใบเสนอราคา)** -- Create, manage, and convert quotations to invoices with one click
+- **Invoice (ใบแจ้งหนี้)** -- Standalone or converted from quotation, with due date tracking and overdue detection
+- **Receipt (ใบเสร็จรับเงิน)** -- Linked to invoice, records payment date, method, and partial payments
+- **Delivery note (ใบส่งของ)** -- Linked to quotation or invoice, items-only (no financial columns)
+- **Document chain** -- Quotation -> Invoice -> Receipt with full traceability (ChainBadges in UI)
+- **PDF generation** -- THSarabunNew font for all document types, Section 86/4 compliance
+- **Bank statement import** -- CSV/Excel with flexible column mapping, Thai bank preset support (KBank TIS-620)
+- **Auto-reconciliation** -- Multi-factor matching (amount + date proximity + description similarity)
+- **Match review UI** -- Side-by-side confirm/reject/manual match with per-entry loading states
+- **Unified document list** -- View all documents with type and status filters
 
-### `3` Organize your transactions using fully customizable categories, projects and fields
+<!-- TODO: Add screenshots -->
 
-![Transactions Table](public/landing/transactions-big.webp)
+---
 
-Adapt TaxHacker to your unique needs with unlimited customization options. Create custom fields, projects, and categories that better suit your specific needs, idustry standards or country.
+## Quick Start
 
-- **Custom categories and projecst**: Create your own categories and projects to group your transactions in any convenient way
-- **Custom fields**: You can create unlimited number of custom fields to extraxt more information from your invoices (it's like creating extra columns in Excel)
-- **Full-text search**: Search through the actual content of recognized documents
-- **Advanced filtering**: Find exactly what you need with search and filter options
-- **AI-powered extraction**: Write your own prompts to extract any custom information from documents
-- **Bulk operations**: Process multiple documents or transactions at once
-
-### `4` Customize any LLM prompt. Even system ones
-
-![Custom Categories](public/landing/custom-llm.webp)
-
-Take full control of how TaxHacker's AI processes your documents. Write custom AI prompts for fields, categories, and projects, or modify the built-in ones to match your specific needs.
-
-- **Customizable system prompts**: Modify the general prompt template in settings to suit your business
-- **Field or project-specific prompts**: Create custom extraction rules for your industry-specific documents
-- **Full control**: Adjust field extraction priorities and naming conventions to match your workflow
-- **Industry optimization**: Fine-tune the AI to understand your specific type of business documents
-- **Full transparency**: Every aspect of the AI extraction process is under your control and can be changed right in settings
-
-TaxHacker is 100% adaptable and tunable to your unique requirements — whether you need to extract emails, addresses, project codes, or any other custom information from your documents.
-
-### `5` Flexible data filtering and export
-
-![Data Export](public/landing/export.webp)
-
-Once your documents are processed, easily view, filter, and export your complete transaction history exactly how you need it.
-
-- **Advanced filtering**: Filter by date ranges, categories, projects, amounts, and any custom fields
-- **Flexible exports**: Export filtered transactions to CSV with all attached documents included
-- **Tax-ready reports**: Generate comprehensive reports for your accountant or tax advisor
-- **Data portability**: Download complete data archives to migrate to other services—your data stays yours
-
-### `6` Self-hosted mode for data privacy
-
-![Self-hosting](docs/screenshots/exported_archive.png)
-
-Keep complete control over your financial data with local storage and self-hosting options. TaxHacker respects your privacy and gives you full ownership of your information.
-
-- **Home server ready**: Host on your own infrastructure for maximum privacy and control
-- **Docker native**: Simple setup with provided Docker containers and compose files
-- **Data ownership**: Your financial documents never leaves your control
-- **No vendor lock-in**: Export everything and migrate whenever you want
-- **Transparent operations**: Full access to source code and complete operational transparency
-
-## 🛳 Deployment and Self-hosting
-
-TaxHacker can be easily self-hosted on your own infrastructure for complete control over your data and application environment. We provide a [Docker image](./Dockerfile) and [Docker Compose](./docker-compose.yml) setup that makes deployment simple:
+For the impatient -- get BanChee running in 2 commands:
 
 ```bash
-curl -O https://raw.githubusercontent.com/vas3k/TaxHacker/main/docker-compose.yml
+curl -O https://raw.githubusercontent.com/mingrath/banchee/main/docker-compose.yml
 
 docker compose up
 ```
 
-The Docker Compose setup includes:
+Then visit [http://localhost:7331](http://localhost:7331).
 
-- TaxHacker application container
-- PostgreSQL 17 database (or connect to your existing database)
-- Automatic database migrations on startup
-- Volume mounts for persistent data storage
-- Production-ready configuration
+---
 
-New Docker images are automatically built and published with every release. You can use specific version tags (e.g., `v1.0.0`) or `latest` for the most recent version.
+## Installation Guide
 
-For advanced setups, you can customize the Docker Compose configuration to fit your infrastructure. The default configuration uses the pre-built image from GitHub Container Registry, but you can also build locally using the provided [Dockerfile](./Dockerfile).
+### Option 1: Docker Self-hosted (Recommended)
 
-Example custom configuration:
+Uses the pre-built image from GitHub Container Registry:
 
-```yaml
-services:
-  app:
-    image: ghcr.io/vas3k/taxhacker:latest
-    ports:
-      - "7331:7331"
-    environment:
-      - SELF_HOSTED_MODE=true
-      - UPLOAD_PATH=/app/data/uploads
-      - DATABASE_URL=postgresql://postgres:postgres@localhost:5432/taxhacker
-    volumes:
-      - ./data:/app/data
-    restart: unless-stopped
+```bash
+# Download the compose file
+curl -O https://raw.githubusercontent.com/mingrath/banchee/main/docker-compose.yml
+
+# Start BanChee + PostgreSQL
+docker compose up -d
+
+# Visit http://localhost:7331
 ```
 
-### Environment Variables
+The `docker-compose.yml` includes:
+- BanChee application container (pre-built image)
+- PostgreSQL 17 database
+- Automatic database migrations on startup
+- Persistent volumes for uploads and database
 
-Configure TaxHacker for your specific needs with these environment variables:
+### Option 2: Docker Local Build
 
-| Variable | Required | Description | Example |
-|----------|----------|-------------|---------|
-| `UPLOAD_PATH` | Yes | Local directory for file uploads and storage | `./data/uploads` |
-| `DATABASE_URL` | Yes | PostgreSQL connection string | `postgresql://user@localhost:5432/taxhacker` |
-| `PORT` | No | Port to run the application on | `7331` (default) |
-| `BASE_URL` | No | Base URL for the application | `http://localhost:7331` |
-| `SELF_HOSTED_MODE` | No | Set to "true" for self-hosting: enables auto-login, custom API keys, and additional features | `true` |
-| `DISABLE_SIGNUP` | No | Disable new user registration on your instance | `false` |
-| `BETTER_AUTH_SECRET` | Yes | Secret key for authentication (minimum 16 characters) | `your-secure-random-key` |
-
-You can also configure LLM provider settings in the application or via environment variables:
-
-- **OpenAI**: `OPENAI_MODEL_NAME` and `OPENAI_API_KEY`
-- **Google Gemini**: `GOOGLE_MODEL_NAME` and `GOOGLE_API_KEY`
-- **Mistral**: `MISTRAL_MODEL_NAME` and `MISTRAL_API_KEY`
-
-## ⌨️ Local Development
-
-We use:
-
-- **Next.js 15+** for the frontend and API
-- **Prisma** for database models and migrations
-- **PostgreSQL** as the database (PostgreSQL 17+ recommended)
-- **Ghostscript and GraphicsMagick** for PDF processing (install on macOS via `brew install gs graphicsmagick`)
-
-Set up your local development environment:
+Build from source using the provided Dockerfile:
 
 ```bash
 # Clone the repository
-git clone https://github.com/vas3k/TaxHacker.git
-cd TaxHacker
+git clone https://github.com/mingrath/banchee.git
+cd banchee
+
+# Build and start
+docker compose -f docker-compose.build.yml up -d
+
+# Visit http://localhost:7331
+```
+
+### Option 3: Local Development
+
+Requirements:
+- Node.js 23+
+- PostgreSQL 17+
+- Ghostscript + GraphicsMagick (macOS: `brew install gs graphicsmagick`)
+
+```bash
+# Clone the repository
+git clone https://github.com/mingrath/banchee.git
+cd banchee
 
 # Install dependencies
 npm install
 
 # Set up environment variables
 cp .env.example .env
-
-# Edit .env with your configuration
-# Make sure to set DATABASE_URL to your PostgreSQL connection string
-# Example: postgresql://user@localhost:5432/taxhacker
+# Edit .env -- set DATABASE_URL to your PostgreSQL connection string
 
 # Initialize the database
 npx prisma generate && npx prisma migrate dev
@@ -197,38 +145,83 @@ npx prisma generate && npx prisma migrate dev
 npm run dev
 ```
 
-Visit `http://localhost:7331` to see your local TaxHacker instance in action.
+Visit [http://localhost:7331](http://localhost:7331).
 
-For a production build, instead of `npm run dev` use the following commands:
+---
 
-```bash
-# Build the application
-npm run build
+## Environment Variables
 
-# Start the production server
-npm run start
-```
+Configure BanChee with these environment variables (see `.env.example`):
 
-## 🤝 Contributing
+| Variable | Required | Default | Description |
+|----------|----------|---------|-------------|
+| `DATABASE_URL` | Yes | -- | PostgreSQL connection string |
+| `BETTER_AUTH_SECRET` | Yes | -- | Auth secret key (min 16 characters) |
+| `PORT` | No | `7331` | Application port |
+| `BASE_URL` | No | `http://localhost:7331` | Public URL |
+| `SELF_HOSTED_MODE` | No | `true` | Self-hosted single-user mode |
+| `DISABLE_SIGNUP` | No | `true` | Disable new user registration |
+| `UPLOAD_PATH` | No | `./data/uploads` | File upload directory |
 
-We welcome contributions to TaxHacker! Here's how you can help make it even better:
+### AI Provider Configuration
 
-- **🐛 Bug Reports**: File detailed issues when you encounter problems
-- **💡 Feature Requests**: Share your ideas for new features and improvements
-- **🔧 Code Contributions**: Submit pull requests to improve the application
-- **📚 Documentation**: Help improve documentation and guides
-- **🎥 Content Creation**: Videos, tutorials, and reviews help us reach more users!
+At least one AI provider API key is required for receipt scanning:
 
-All development happens on GitHub through issues and pull requests. We appreciate any help.
+| Variable | Provider | Default Model |
+|----------|----------|---------------|
+| `OPENAI_API_KEY` / `OPENAI_MODEL_NAME` | OpenAI | `gpt-4o-mini` |
+| `GOOGLE_API_KEY` / `GOOGLE_MODEL_NAME` | Google Gemini | `gemini-2.5-flash` |
+| `MISTRAL_API_KEY` / `MISTRAL_MODEL_NAME` | Mistral | `mistral-medium-latest` |
 
-[![PRs Welcome](https://img.shields.io/badge/🤯_PRs-welcome-ffcb47?labelColor=black&style=for-the-badge)](https://github.com/vas3k/TaxHacker/pulls)
+### Optional Services
 
-## ❤️ Support the Project
+| Variable | Service | Description |
+|----------|---------|-------------|
+| `STRIPE_SECRET_KEY` / `STRIPE_WEBHOOK_SECRET` | Stripe | Payment processing (cloud mode) |
+| `RESEND_API_KEY` / `RESEND_FROM_EMAIL` | Resend | Email delivery for OTP |
+| `NEXT_PUBLIC_SENTRY_DSN` / `SENTRY_ORG` / `SENTRY_PROJECT` | Sentry | Error tracking |
 
-If TaxHacker has helped you save time or manage your finances better, consider supporting its continued development! Your donations help us maintain the project, add new features, and keep it free and open source. Every contribution helps ensure we can keep improving and maintaining this tool for the community.
+---
 
-[![Thank the TaxHacker devs](https://img.shields.io/badge/❤️-donate%20to%20Taxhacker%20devs-f08080?labelColor=black&style=for-the-badge)](https://vas3k.com/donate/)
+## Thai Tax Terminology Reference
 
-## 📄 License
+| English | Thai | Code |
+|---------|------|------|
+| Value Added Tax (VAT) | ภาษีมูลค่าเพิ่ม | ภ.พ.30 |
+| Withholding Tax (WHT) | ภาษีหัก ณ ที่จ่าย | ภ.ง.ด.3 / ภ.ง.ด.53 |
+| Corporate Income Tax (CIT) | ภาษีเงินได้นิติบุคคล | ภ.ง.ด.50 / ภ.ง.ด.51 |
+| Tax Invoice | ใบกำกับภาษี | Section 86/4 |
+| Withholding Tax Certificate | หนังสือรับรองหัก ณ ที่จ่าย | 50 ทวิ |
+| Purchase Tax Report | รายงานภาษีซื้อ | -- |
+| Sales Tax Report | รายงานภาษีขาย | -- |
+| Non-deductible Expense | รายจ่ายต้องห้าม | Section 65 tri |
+| Quotation | ใบเสนอราคา | -- |
+| Invoice / Billing Note | ใบแจ้งหนี้ | -- |
+| Receipt | ใบเสร็จรับเงิน | -- |
+| Delivery Note | ใบส่งของ | -- |
 
-TaxHacker is licensed under the [MIT License](LICENSE).
+---
+
+## Tech Stack
+
+- **Framework:** Next.js 15 (App Router) + React 19
+- **Database:** PostgreSQL 17 + Prisma ORM
+- **AI:** LangChain (OpenAI / Google Gemini / Mistral)
+- **UI:** shadcn/ui + Tailwind CSS + Lucide icons
+- **PDF:** @react-pdf/renderer + THSarabunNew font
+- **Auth:** Better Auth (email OTP, self-hosted bypass)
+- **Deployment:** Docker (node:23-slim + postgres:17-alpine)
+
+---
+
+## License
+
+BanChee is licensed under the [MIT License](LICENSE).
+
+## Credits
+
+Built on [TaxHacker](https://github.com/vas3k/TaxHacker) by [vas3k](https://vas3k.com/) -- extending its AI receipt scanning foundation with a complete Thai tax compliance layer.
+
+---
+
+*BanChee (บัญชี) -- AI-powered Thai SME tax accounting*
