@@ -2,16 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Document Workflow
-status: planning
-stopped_at: Phase 5 UI-SPEC approved
-last_updated: "2026-03-26T00:56:08.655Z"
-last_activity: 2026-03-25 -- v1.1 roadmap created (4 phases, 23 requirements mapped)
+status: unknown
+stopped_at: Completed 05-01-PLAN.md
+last_updated: "2026-03-26T01:46:41.178Z"
 progress:
   total_phases: 4
   completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
-  percent: 50
+  total_plans: 4
+  completed_plans: 1
 ---
 
 # Project State
@@ -21,16 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-25)
 
 **Core value:** A Thai SME owner can snap a receipt, have AI handle the rest, and generate monthly tax filings in 5 minutes -- zero accountant needed, zero tax penalties.
-**Current focus:** v1.1 Document Workflow -- Phase 5 ready to plan
+**Current focus:** Phase 05 — document-model-quotation-system
 
 ## Current Position
 
-Phase: 5 of 8 (Document Model + Quotation System)
-Plan: 0 of TBD in current phase
-Status: Ready to plan
-Last activity: 2026-03-25 -- v1.1 roadmap created (4 phases, 23 requirements mapped)
-
-Progress: [##########..........] 50% (v1.0 complete, v1.1 starting)
+Phase: 05 (document-model-quotation-system) — EXECUTING
+Plan: 2 of 4
 
 ## Performance Metrics
 
@@ -55,6 +49,7 @@ Progress: [##########..........] 50% (v1.0 complete, v1.1 starting)
 - Trend: Stable
 
 *Updated after each plan completion*
+| Phase 05 P01 | 5min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -68,6 +63,9 @@ Recent decisions affecting current work:
 - [v1.1 Research]: XState rejected -- 20 lines of TypeScript transition table replaces 15kB library
 - [v1.1 Research]: Satang convention must be established in Phase 5 before any amount logic
 - [v1.1 Research]: Existing tax invoices in AppData remain untouched -- migration deferred to v1.2
+- [Phase 05]: Document state machine uses plain transition table -- no XState dependency
+- [Phase 05]: Document number format QT-BBBB-NNNN with Buddhist Era year-scoped counters in Setting model
+- [Phase 05]: vi.hoisted() pattern required for Prisma mocking in Vitest
 
 ### Pending Todos
 
@@ -81,6 +79,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-26T00:56:08.652Z
-Stopped at: Phase 5 UI-SPEC approved
-Resume file: .planning/phases/05-document-model-quotation-system/05-UI-SPEC.md
+Last session: 2026-03-26T01:46:41.176Z
+Stopped at: Completed 05-01-PLAN.md
+Resume file: None
