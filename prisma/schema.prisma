@@ -306,6 +306,10 @@ model Document {
   issuedAt         DateTime? @map("issued_at")
   validUntil       DateTime? @map("valid_until")
   paymentTerms     String?   @map("payment_terms")
+  dueDate          DateTime? @map("due_date")
+  paymentMethod    String?   @map("payment_method")
+  paymentDate      DateTime? @map("payment_date")
+  paidAmount       Int?      @map("paid_amount")
 
   subtotal         Int       @default(0)
   discountAmount   Int       @default(0) @map("discount_amount")

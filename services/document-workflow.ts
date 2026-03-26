@@ -27,9 +27,47 @@ export const QUOTATION_STATUSES = {
 
 export type QuotationStatus = keyof typeof QUOTATION_STATUSES
 
+export const INVOICE_STATUSES = {
+  draft: { label: "แบบร่าง", color: "secondary" },
+  sent: { label: "ส่งแล้ว", color: "blue" },
+  overdue: { label: "เกินกำหนด", color: "orange" },
+  paid: { label: "ชำระแล้ว", color: "green" },
+  voided: { label: "ยกเลิก", color: "muted" },
+} as const
+
+export type InvoiceStatus = keyof typeof INVOICE_STATUSES
+
+export const RECEIPT_STATUSES = {
+  draft: { label: "แบบร่าง", color: "secondary" },
+  confirmed: { label: "ยืนยันแล้ว", color: "green" },
+  voided: { label: "ยกเลิก", color: "muted" },
+} as const
+
+export type ReceiptStatus = keyof typeof RECEIPT_STATUSES
+
+export const DELIVERY_NOTE_STATUSES = {
+  draft: { label: "แบบร่าง", color: "secondary" },
+  delivered: { label: "ส่งแล้ว", color: "green" },
+  voided: { label: "ยกเลิก", color: "muted" },
+} as const
+
+export type DeliveryNoteStatus = keyof typeof DELIVERY_NOTE_STATUSES
+
+/**
+ * Merged status map across all document types.
+ * Overlapping keys (draft, voided) use the same label/color so spread order is irrelevant.
+ */
+export const ALL_DOCUMENT_STATUSES = {
+  ...QUOTATION_STATUSES,
+  ...INVOICE_STATUSES,
+  ...RECEIPT_STATUSES,
+  ...DELIVERY_NOTE_STATUSES,
+} as const
+
 /**
  * Valid status transitions per document type.
- * Terminal states (rejected, converted, voided, expired) have no outgoing transitions.
+ * Terminal states (rejected, converted, voided, expired, paid, confirmed, delivered) have no outgoing transitions.
+ * Note: "overdue" is display-only — not a DB status, not in transitions.
  */
 export const VALID_TRANSITIONS: Record<string, Record<string, string[]>> = {
   QUOTATION: {
@@ -37,6 +75,28 @@ export const VALID_TRANSITIONS: Record<string, Record<string, string[]>> = {
     sent: ["accepted", "rejected", "voided"],
     accepted: ["converted"],
   },
+  INVOICE: {
+    draft: ["sent", "voided"],
+    sent: ["paid", "voided"],
+  },
+  RECEIPT: {
+    draft: ["confirmed", "voided"],
+  },
+  DELIVERY_NOTE: {
+    draft: ["delivered", "voided"],
+  },
+}
+
+/**
+ * Get the effective display status for an invoice.
+ * "overdue" is a virtual/display-only status — the DB always stores "sent".
+ * If the invoice is "sent" and its dueDate is in the past, display as "overdue".
+ */
+export function getEffectiveInvoiceStatus(status: string, dueDate: Date | null): string {
+  if (status === "sent" && dueDate && dueDate < new Date()) {
+    return "overdue"
+  }
+  return status
 }
 
 /**

@@ -6,6 +6,10 @@ import {
   getCounterKey,
   DOCUMENT_PREFIXES,
   QUOTATION_STATUSES,
+  INVOICE_STATUSES,
+  RECEIPT_STATUSES,
+  DELIVERY_NOTE_STATUSES,
+  getEffectiveInvoiceStatus,
 } from "@/services/document-workflow"
 
 describe("canTransition", () => {
@@ -140,5 +144,135 @@ describe("QUOTATION_STATUSES", () => {
 
   it("draft label is Thai", () => {
     expect(QUOTATION_STATUSES.draft.label).toBe("\u0e41\u0e1a\u0e1a\u0e23\u0e48\u0e32\u0e07")
+  })
+})
+
+// ─── INVOICE status transitions ───────────────────────────────
+describe("canTransition — INVOICE", () => {
+  it("allows draft -> sent", () => {
+    expect(canTransition("INVOICE", "draft", "sent")).toBe(true)
+  })
+
+  it("allows draft -> voided", () => {
+    expect(canTransition("INVOICE", "draft", "voided")).toBe(true)
+  })
+
+  it("allows sent -> paid", () => {
+    expect(canTransition("INVOICE", "sent", "paid")).toBe(true)
+  })
+
+  it("allows sent -> voided", () => {
+    expect(canTransition("INVOICE", "sent", "voided")).toBe(true)
+  })
+
+  it("rejects paid -> draft (terminal)", () => {
+    expect(canTransition("INVOICE", "paid", "draft")).toBe(false)
+  })
+
+  it("rejects voided -> sent (terminal)", () => {
+    expect(canTransition("INVOICE", "voided", "sent")).toBe(false)
+  })
+})
+
+// ─── RECEIPT status transitions ───────────────────────────────
+describe("canTransition — RECEIPT", () => {
+  it("allows draft -> confirmed", () => {
+    expect(canTransition("RECEIPT", "draft", "confirmed")).toBe(true)
+  })
+
+  it("allows draft -> voided", () => {
+    expect(canTransition("RECEIPT", "draft", "voided")).toBe(true)
+  })
+
+  it("rejects confirmed -> draft (terminal)", () => {
+    expect(canTransition("RECEIPT", "confirmed", "draft")).toBe(false)
+  })
+})
+
+// ─── DELIVERY_NOTE status transitions ─────────────────────────
+describe("canTransition — DELIVERY_NOTE", () => {
+  it("allows draft -> delivered", () => {
+    expect(canTransition("DELIVERY_NOTE", "draft", "delivered")).toBe(true)
+  })
+
+  it("allows draft -> voided", () => {
+    expect(canTransition("DELIVERY_NOTE", "draft", "voided")).toBe(true)
+  })
+
+  it("rejects delivered -> draft (terminal)", () => {
+    expect(canTransition("DELIVERY_NOTE", "delivered", "draft")).toBe(false)
+  })
+})
+
+// ─── Status maps ──────────────────────────────────────────────
+describe("INVOICE_STATUSES", () => {
+  it("has 5 statuses: draft, sent, overdue, paid, voided", () => {
+    const keys = Object.keys(INVOICE_STATUSES)
+    expect(keys).toEqual(
+      expect.arrayContaining(["draft", "sent", "overdue", "paid", "voided"])
+    )
+    expect(keys).toHaveLength(5)
+  })
+
+  it("has correct Thai labels", () => {
+    expect(INVOICE_STATUSES.draft.label).toBe("แบบร่าง")
+    expect(INVOICE_STATUSES.sent.label).toBe("ส่งแล้ว")
+    expect(INVOICE_STATUSES.overdue.label).toBe("เกินกำหนด")
+    expect(INVOICE_STATUSES.paid.label).toBe("ชำระแล้ว")
+    expect(INVOICE_STATUSES.voided.label).toBe("ยกเลิก")
+  })
+})
+
+describe("RECEIPT_STATUSES", () => {
+  it("has 3 statuses: draft, confirmed, voided", () => {
+    const keys = Object.keys(RECEIPT_STATUSES)
+    expect(keys).toEqual(
+      expect.arrayContaining(["draft", "confirmed", "voided"])
+    )
+    expect(keys).toHaveLength(3)
+  })
+
+  it("has correct Thai labels", () => {
+    expect(RECEIPT_STATUSES.draft.label).toBe("แบบร่าง")
+    expect(RECEIPT_STATUSES.confirmed.label).toBe("ยืนยันแล้ว")
+    expect(RECEIPT_STATUSES.voided.label).toBe("ยกเลิก")
+  })
+})
+
+describe("DELIVERY_NOTE_STATUSES", () => {
+  it("has 3 statuses: draft, delivered, voided", () => {
+    const keys = Object.keys(DELIVERY_NOTE_STATUSES)
+    expect(keys).toEqual(
+      expect.arrayContaining(["draft", "delivered", "voided"])
+    )
+    expect(keys).toHaveLength(3)
+  })
+
+  it("has correct Thai labels", () => {
+    expect(DELIVERY_NOTE_STATUSES.draft.label).toBe("แบบร่าง")
+    expect(DELIVERY_NOTE_STATUSES.delivered.label).toBe("ส่งแล้ว")
+    expect(DELIVERY_NOTE_STATUSES.voided.label).toBe("ยกเลิก")
+  })
+})
+
+// ─── getEffectiveInvoiceStatus ─────────────────────────────────
+describe("getEffectiveInvoiceStatus", () => {
+  it('returns "overdue" when status is "sent" and dueDate is in the past', () => {
+    const pastDate = new Date("2020-01-01")
+    expect(getEffectiveInvoiceStatus("sent", pastDate)).toBe("overdue")
+  })
+
+  it('returns "sent" when status is "sent" and dueDate is in the future', () => {
+    const futureDate = new Date("2099-12-31")
+    expect(getEffectiveInvoiceStatus("sent", futureDate)).toBe("sent")
+  })
+
+  it('returns "sent" when status is "sent" and dueDate is null', () => {
+    expect(getEffectiveInvoiceStatus("sent", null)).toBe("sent")
+  })
+
+  it("returns status as-is for non-sent statuses", () => {
+    expect(getEffectiveInvoiceStatus("draft", new Date("2020-01-01"))).toBe("draft")
+    expect(getEffectiveInvoiceStatus("paid", new Date("2020-01-01"))).toBe("paid")
   })
 })
