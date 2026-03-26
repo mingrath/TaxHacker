@@ -91,7 +91,11 @@ Plans:
   1. README.md is rewritten from TaxHacker to BanChee with Thai + English sections, installation guide, feature overview, and screenshots
   2. Docker production build completes the full cycle: build image, run migrations, seed data, serve the app -- all without errors
   3. Visual QA confirms AI extraction accuracy on real Thai receipts, PDF fonts render correctly with THSarabunNew, and all report downloads produce valid files
-**Plans**: TBD
+**Plans:** 2 plans
+
+Plans:
+- [ ] 08-01-PLAN.md — README rebrand + Docker build verification
+- [ ] 08-02-PLAN.md — Visual QA: route smoke test + human verification
 
 ## Progress
 
@@ -104,7 +108,7 @@ Plans:
 | 5. Document Model + Quotation System | v1.1 | 0/4 | Planning complete | - |
 | 6. Document Workflow Chain + Conversions | v1.1 | 0/5 | Planning complete | - |
 | 7. Bank Reconciliation | v1.1 | 0/4 | Planning complete | - |
-| 8. Ship-Ready Polish | v1.1 | 0/0 | Not started | - |
+| 8. Ship-Ready Polish | v1.1 | 0/2 | Planning complete | - |
 
 ---
-*Last updated: 2026-03-26 after Phase 7 planning complete*
+*Last updated: 2026-03-26 after Phase 8 planning complete*
