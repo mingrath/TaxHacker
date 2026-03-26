@@ -43,6 +43,7 @@ model User {
   contacts            Contact[]
   filingStatuses      FilingStatus[]
   documents           Document[]
+  bankStatements      BankStatement[]
 
   @@map("users")
 }
@@ -337,4 +338,53 @@ model Document {
   @@index([sourceDocumentId])
   @@index([issuedAt])
   @@map("documents")
+}
+
+model BankStatement {
+  id              String      @id @default(uuid()) @db.Uuid
+  userId          String      @map("user_id") @db.Uuid
+  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  bankName        String      @map("bank_name")
+  accountNumber   String?     @map("account_number")
+  filename        String
+  fileHash        String?     @map("file_hash")
+  periodStart     DateTime?   @map("period_start")
+  periodEnd       DateTime?   @map("period_end")
+  status          String      @default("imported")
+
+  totalEntries    Int         @default(0) @map("total_entries")
+  matchedEntries  Int         @default(0) @map("matched_entries")
+
+  entries         BankEntry[]
+
+  createdAt       DateTime    @default(now()) @map("created_at")
+
+  @@index([userId])
+  @@map("bank_statements")
+}
+
+model BankEntry {
+  id              String        @id @default(uuid()) @db.Uuid
+  statementId     String        @map("statement_id") @db.Uuid
+  statement       BankStatement @relation(fields: [statementId], references: [id], onDelete: Cascade)
+
+  date            DateTime
+  description     String
+  deposit         Int?
+  withdrawal      Int?
+  balance         Int?
+  reference       String?
+
+  matchStatus     String        @default("unmatched") @map("match_status")
+  transactionId   String?       @map("transaction_id") @db.Uuid
+  matchScore      Int?          @map("match_score")
+  matchReasons    Json?         @map("match_reasons")
+
+  createdAt       DateTime      @default(now()) @map("created_at")
+
+  @@index([statementId])
+  @@index([matchStatus])
+  @@index([date])
+  @@map("bank_entries")
 }
