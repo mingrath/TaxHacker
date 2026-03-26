@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation"
 import Link from "next/link"
 import { getCurrentUser } from "@/lib/auth"
-import { getDocumentById, getDocumentsBySourceId } from "@/models/documents"
+import { getDocumentById, getDocumentsBySourceId, sumReceiptAmountsForInvoice } from "@/models/documents"
 import { formatCurrency } from "@/lib/utils"
 import { formatThaiDate } from "@/services/thai-date"
 import { getEffectiveInvoiceStatus, INVOICE_STATUSES } from "@/services/document-workflow"
@@ -18,6 +18,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { InvoiceDetailActions } from "./detail-actions"
+import { PaymentProgressBar } from "../components/payment-progress-bar"
 
 export const dynamic = "force-dynamic"
 
@@ -57,17 +58,20 @@ export default async function InvoiceDetailPage({
     doc.dueDate ? new Date(doc.dueDate) : null
   )
 
-  // Load derived documents (receipts, delivery notes) and source document
-  const [derivedDocs, sourceDoc] = await Promise.all([
+  // Load derived documents (receipts, delivery notes), source document, and paid total
+  const [derivedDocs, sourceDoc, totalPaid] = await Promise.all([
     getDocumentsBySourceId(user.id, doc.id),
     doc.sourceDocumentId
       ? getDocumentById(user.id, doc.sourceDocumentId)
       : null,
+    sumReceiptAmountsForInvoice(user.id, doc.id),
   ])
 
   const receipts = derivedDocs.filter((d) => d.documentType === "RECEIPT" && d.status !== "voided")
-  const totalPaid = receipts.reduce((sum, r) => sum + (r.paidAmount ?? 0), 0)
-  const remaining = doc.total - totalPaid
+  const isOverdue = effectiveStatus === "overdue"
+  const overdueDays = isOverdue && doc.dueDate
+    ? Math.ceil((Date.now() - new Date(doc.dueDate).getTime()) / 86400000)
+    : 0
 
   // Build InvoiceData for PDF download
   const invoiceData: InvoiceData = {
@@ -308,25 +312,13 @@ export default async function InvoiceDetailPage({
         </CardHeader>
         <CardContent>
           {/* Payment Progress */}
-          <div className="space-y-2 mb-4">
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">{"\u0e0a\u0e33\u0e23\u0e30\u0e41\u0e25\u0e49\u0e27"}</span>
-              <span className="tabular-nums font-medium">
-                {formatCurrency(totalPaid, "THB")}
-              </span>
-            </div>
-            <div className="w-full bg-muted rounded-full h-2">
-              <div
-                className="bg-green-600 h-2 rounded-full transition-all"
-                style={{
-                  width: `${Math.min((totalPaid / Math.max(doc.total, 1)) * 100, 100)}%`,
-                }}
-              />
-            </div>
-            <div className="flex justify-between text-xs text-muted-foreground">
-              <span>{formatCurrency(totalPaid, "THB")} / {formatCurrency(doc.total, "THB")}</span>
-              <span>{"\u0e04\u0e07\u0e40\u0e2b\u0e25\u0e37\u0e2d"}: {formatCurrency(remaining, "THB")}</span>
-            </div>
+          <div className="mb-4">
+            <PaymentProgressBar
+              totalAmount={doc.total}
+              paidAmount={totalPaid}
+              isOverdue={isOverdue}
+              overdueDays={overdueDays}
+            />
           </div>
 
           {/* Linked Receipts */}

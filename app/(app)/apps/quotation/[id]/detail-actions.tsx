@@ -9,13 +9,15 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { Download, Loader2 } from "lucide-react"
+import { Download, FileText, Loader2, Truck } from "lucide-react"
 import { createElement, startTransition, useActionState, useCallback, useEffect, useState } from "react"
 import { pdf } from "@react-pdf/renderer"
 import { QuotationPDF } from "../components/quotation-pdf"
 import { updateQuotationStatusAction } from "../actions"
 import { canTransition } from "@/services/document-workflow"
 import type { QuotationData } from "@/services/document-workflow"
+import { convertQuotationToInvoiceAction } from "@/app/(app)/apps/invoice/actions"
+import { createDeliveryNoteFromSourceAction } from "@/app/(app)/apps/delivery-note/actions"
 import { toast } from "sonner"
 
 function downloadBlob(blob: Blob, filename: string) {
@@ -185,6 +187,33 @@ export function QuotationDetailActions({
             </>
           )}
         </>
+      )}
+
+      {/* Conversion buttons separator */}
+      {(effectiveStatus === "accepted" || effectiveStatus === "converted") && (
+        <div className="hidden sm:block border-l h-6 mx-1" />
+      )}
+
+      {/* Conversion: Create Invoice (accepted only) */}
+      {effectiveStatus === "accepted" && (
+        <form action={convertQuotationToInvoiceAction as any}>
+          <input type="hidden" name="sourceDocumentId" value={documentId} />
+          <Button type="submit" variant="default">
+            <FileText className="h-4 w-4 mr-2" />
+            {"สร้างใบแจ้งหนี้"}
+          </Button>
+        </form>
+      )}
+
+      {/* Conversion: Create Delivery Note (accepted or converted) */}
+      {(effectiveStatus === "accepted" || effectiveStatus === "converted") && (
+        <form action={createDeliveryNoteFromSourceAction as any}>
+          <input type="hidden" name="sourceDocumentId" value={documentId} />
+          <Button type="submit" variant="outline">
+            <Truck className="h-4 w-4 mr-2" />
+            {"สร้างใบส่งของ"}
+          </Button>
+        </form>
       )}
 
       {/* Void Confirmation Dialog */}
