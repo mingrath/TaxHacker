@@ -29,9 +29,9 @@ Requirements for v1.1 Document Workflow milestone. Each maps to roadmap phases.
 
 ### Bank Reconciliation (BANK)
 
-- [ ] **BANK-01**: User can import bank statements from CSV or Excel files with flexible column mapping UI
-- [ ] **BANK-02**: System handles Thai bank CSV variations (TIS-620 encoding, Buddhist Era dates, inconsistent column positions)
-- [ ] **BANK-03**: Auto-matching uses multi-factor scoring: amount (exact match) + date proximity + description similarity
+- [x] **BANK-01**: User can import bank statements from CSV or Excel files with flexible column mapping UI
+- [x] **BANK-02**: System handles Thai bank CSV variations (TIS-620 encoding, Buddhist Era dates, inconsistent column positions)
+- [x] **BANK-03**: Auto-matching uses multi-factor scoring: amount (exact match) + date proximity + description similarity
 - [ ] **BANK-04**: User can review matched pairs in side-by-side UI: confirm, reject, or manually match
 - [ ] **BANK-05**: Unmatched bank entries can create new transactions directly from the reconciliation view
 - [ ] **BANK-06**: Reconciliation status tracked per statement (imported/in-progress/reconciled)
@@ -92,9 +92,9 @@ Deferred to future release. Tracked but not in current roadmap.
 | DOC-06 | Phase 6 | Complete |
 | DOC-07 | Phase 5 | Complete |
 | DOC-08 | Phase 6 | Complete |
-| BANK-01 | Phase 7 | Pending |
-| BANK-02 | Phase 7 | Pending |
-| BANK-03 | Phase 7 | Pending |
+| BANK-01 | Phase 7 | Complete |
+| BANK-02 | Phase 7 | Complete |
+| BANK-03 | Phase 7 | Complete |
 | BANK-04 | Phase 7 | Pending |
 | BANK-05 | Phase 7 | Pending |
 | BANK-06 | Phase 7 | Pending |
