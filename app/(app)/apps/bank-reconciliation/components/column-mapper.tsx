@@ -1,7 +1,7 @@
 "use client"
 
 import { useCallback, useMemo } from "react"
-import type { ColumnMapping } from "@/services/bank-statement-parser"
+import type { ColumnMapping } from "@/services/bank-constants"
 import {
   Select,
   SelectContent,

@@ -3,7 +3,7 @@
 import { useCallback, useRef, useState } from "react"
 import { Upload, FileSpreadsheet, Loader2, Info } from "lucide-react"
 import { toast } from "sonner"
-import { BANK_PRESETS } from "@/services/bank-statement-parser"
+import { BANK_PRESETS } from "@/services/bank-constants"
 import {
   Select,
   SelectContent,

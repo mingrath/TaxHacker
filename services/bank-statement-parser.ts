@@ -10,17 +10,11 @@
 import { parseString } from "@fast-csv/parse"
 import ExcelJS from "exceljs"
 import crypto from "crypto"
+import { BANK_PRESETS, type ColumnMapping } from "./bank-constants"
+
+export { BANK_PRESETS, type ColumnMapping } from "./bank-constants"
 
 // ─── Types ─────────────────────────────────────────────────────
-
-export type ColumnMapping = {
-  date: number
-  description: number
-  deposit: number | null
-  withdrawal: number | null
-  balance: number | null
-  reference: number | null
-}
 
 export type ParsedBankEntry = {
   date: Date
@@ -206,45 +200,5 @@ export function generateFileHash(buffer: Buffer): string {
 
 // ─── Bank Presets ──────────────────────────────────────────────
 
-/**
- * Bank presets define DEFAULT column mappings.
- * User can always override via dropdown UI.
- * These are best-guess based on common CSV exports.
- */
-export const BANK_PRESETS: Record<string, {
-  label: string
-  labelTh: string
-  defaultMapping: ColumnMapping
-  defaultSkipLines: number
-  encoding: "utf-8" | "windows-874"
-  dateFormat: "DD/MM/YYYY" | "YYYY-MM-DD"
-  useBuddhistEra: boolean
-}> = {
-  kbank: {
-    label: "KBank",
-    labelTh: "กสิกรไทย",
-    defaultMapping: { date: 0, description: 1, withdrawal: 2, deposit: 3, balance: 4, reference: null },
-    defaultSkipLines: 1,
-    encoding: "windows-874",
-    dateFormat: "DD/MM/YYYY",
-    useBuddhistEra: true,
-  },
-  scb: {
-    label: "SCB",
-    labelTh: "ไทยพาณิชย์",
-    defaultMapping: { date: 0, description: 1, withdrawal: 2, deposit: 3, balance: 4, reference: null },
-    defaultSkipLines: 1,
-    encoding: "utf-8",
-    dateFormat: "DD/MM/YYYY",
-    useBuddhistEra: false,
-  },
-  bbl: {
-    label: "BBL",
-    labelTh: "กรุงเทพ",
-    defaultMapping: { date: 0, description: 1, withdrawal: 2, deposit: 3, balance: 4, reference: null },
-    defaultSkipLines: 1,
-    encoding: "utf-8",
-    dateFormat: "DD/MM/YYYY",
-    useBuddhistEra: false,
-  },
-}
+// BANK_PRESETS moved to ./bank-constants.ts for client-safe imports
+// Re-exported at the top of this file for backward compatibility
