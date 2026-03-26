@@ -42,6 +42,7 @@ model User {
   progress            Progress[]
   contacts            Contact[]
   filingStatuses      FilingStatus[]
+  documents           Document[]
 
   @@map("users")
 }
@@ -290,4 +291,46 @@ model FilingStatus {
   @@unique([userId, formType, taxMonth, taxYear])
   @@index([userId])
   @@map("filing_statuses")
+}
+
+model Document {
+  id               String    @id @default(uuid()) @db.Uuid
+  userId           String    @map("user_id") @db.Uuid
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  documentType     String    @map("document_type")
+  documentNumber   String    @map("document_number")
+  status           String    @default("draft")
+
+  contactId        String?   @map("contact_id") @db.Uuid
+  issuedAt         DateTime? @map("issued_at")
+  validUntil       DateTime? @map("valid_until")
+  paymentTerms     String?   @map("payment_terms")
+
+  subtotal         Int       @default(0)
+  discountAmount   Int       @default(0) @map("discount_amount")
+  vatRate          Int       @default(0) @map("vat_rate")
+  vatAmount        Int       @default(0) @map("vat_amount")
+  total            Int       @default(0)
+
+  items            Json      @default("[]")
+  sellerData       Json?     @map("seller_data")
+  buyerData        Json?     @map("buyer_data")
+
+  sourceDocumentId String?   @map("source_document_id") @db.Uuid
+  sourceDocument   Document? @relation("DocumentChain", fields: [sourceDocumentId], references: [id])
+  derivedDocuments Document[] @relation("DocumentChain")
+
+  note             String?
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+
+  @@unique([userId, documentNumber])
+  @@index([userId])
+  @@index([documentType])
+  @@index([status])
+  @@index([contactId])
+  @@index([sourceDocumentId])
+  @@index([issuedAt])
+  @@map("documents")
 }
