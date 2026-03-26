@@ -6,7 +6,7 @@ import Link from "next/link"
 import { ArrowLeft, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { FormError } from "@/components/forms/error"
-import { BANK_PRESETS, type ColumnMapping } from "@/services/bank-statement-parser"
+import { BANK_PRESETS, type ColumnMapping } from "@/services/bank-constants"
 import { importBankStatementAction } from "@/app/(app)/apps/bank-reconciliation/actions"
 import StatementUpload from "@/app/(app)/apps/bank-reconciliation/components/statement-upload"
 import ColumnMapper, {
