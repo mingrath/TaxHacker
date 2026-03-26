@@ -9,9 +9,9 @@ Requirements for v1.1 Document Workflow milestone. Each maps to roadmap phases.
 
 ### Quotation System (QUOT)
 
-- [ ] **QUOT-01**: User can create a quotation with line items (description, quantity, unit, unit price, amount) and contact selection
+- [x] **QUOT-01**: User can create a quotation with line items (description, quantity, unit, unit price, amount) and contact selection
 - [x] **QUOT-02**: Quotation uses sequential numbering (QT-YYMM-NNN) with configurable prefix
-- [ ] **QUOT-03**: Quotation stores validity period (default 30 days) and payment terms
+- [x] **QUOT-03**: Quotation stores validity period (default 30 days) and payment terms
 - [ ] **QUOT-04**: User can generate quotation PDF with THSarabunNew (company header, line items table, totals, signature area)
 - [ ] **QUOT-05**: User can view all quotations in a list with status badges (draft/sent/accepted/expired/converted)
 - [ ] **QUOT-06**: User can convert accepted quotation to tax invoice with one click (pre-fills all data, marks quotation as converted)
@@ -78,9 +78,9 @@ Deferred to future release. Tracked but not in current roadmap.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| QUOT-01 | Phase 5 | Pending |
+| QUOT-01 | Phase 5 | Complete |
 | QUOT-02 | Phase 5 | Complete |
-| QUOT-03 | Phase 5 | Pending |
+| QUOT-03 | Phase 5 | Complete |
 | QUOT-04 | Phase 5 | Pending |
 | QUOT-05 | Phase 5 | Pending |
 | QUOT-06 | Phase 6 | Pending |

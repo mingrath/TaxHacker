@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Document Workflow
 status: unknown
-stopped_at: Completed 05-01-PLAN.md
-last_updated: "2026-03-26T01:46:41.178Z"
+stopped_at: Completed 05-02-PLAN.md
+last_updated: "2026-03-26T01:51:55.839Z"
 progress:
   total_phases: 4
   completed_phases: 0
   total_plans: 4
-  completed_plans: 1
+  completed_plans: 2
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-25)
 ## Current Position
 
 Phase: 05 (document-model-quotation-system) — EXECUTING
-Plan: 2 of 4
+Plan: 3 of 4
 
 ## Performance Metrics
 
@@ -50,6 +50,7 @@ Plan: 2 of 4
 
 *Updated after each plan completion*
 | Phase 05 P01 | 5min | 2 tasks | 6 files |
+| Phase 05 P02 | 3min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -66,6 +67,8 @@ Recent decisions affecting current work:
 - [Phase 05]: Document state machine uses plain transition table -- no XState dependency
 - [Phase 05]: Document number format QT-BBBB-NNNN with Buddhist Era year-scoped counters in Setting model
 - [Phase 05]: vi.hoisted() pattern required for Prisma mocking in Vitest
+- [Phase 05]: Line items parsed from FormData.getAll() separately from Zod validation -- Zod cannot handle dynamic array indices from FormData
+- [Phase 05]: Baht-to-satang conversion at action boundary with Math.round(parseFloat() * 100) -- prevents satang double-division pitfall
 
 ### Pending Todos
 
@@ -79,6 +82,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-26T01:46:41.176Z
-Stopped at: Completed 05-01-PLAN.md
+Last session: 2026-03-26T01:51:55.837Z
+Stopped at: Completed 05-02-PLAN.md
 Resume file: None
