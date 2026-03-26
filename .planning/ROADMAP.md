@@ -80,7 +80,7 @@ Plans:
 Plans:
 - [x] 07-01-PLAN.md — Prisma schema + bank statement parser + matching algorithm (TDD)
 - [x] 07-02-PLAN.md — Model layer + Zod schemas + server actions + app manifest
-- [ ] 07-03-PLAN.md — Import UI: file upload, bank presets, column mapping
+- [x] 07-03-PLAN.md — Import UI: file upload, bank presets, column mapping
 - [ ] 07-04-PLAN.md — Review UI: statement list, match review table, progress tracking + visual verification
 
 ### Phase 8: Ship-Ready Polish
