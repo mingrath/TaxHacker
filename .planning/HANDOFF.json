@@ -1,0 +1,33 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-03-26T11:25:28.162Z",
+  "phase": null,
+  "phase_name": null,
+  "phase_dir": null,
+  "plan": null,
+  "task": null,
+  "total_tasks": null,
+  "status": "milestone_complete",
+  "milestone": "v1.1",
+  "milestone_name": "Document Workflow",
+  "completed_milestones": ["v1.0", "v1.1"],
+  "completed_tasks": [],
+  "remaining_tasks": [],
+  "blockers": [],
+  "human_actions_pending": [
+    {"action": "Test quotation PDF rendering with THSarabunNew font", "context": "Phase 5 human UAT items pending", "blocking": false},
+    {"action": "Test partial payment flow end-to-end in browser", "context": "Phase 6 human UAT items pending", "blocking": false},
+    {"action": "Verify Docker production build succeeds after type fixes", "context": "Background Docker build failed before fixes were committed", "blocking": false}
+  ],
+  "decisions": [
+    {"decision": "TDD mandatory for all BanChee development", "rationale": "User explicitly requested Vitest + tests first", "phase": "all"},
+    {"decision": "Single Document Prisma model with documentType enum", "rationale": "Simpler than separate tables, supports chain linking via sourceDocumentId", "phase": "05"},
+    {"decision": "One-click conversion, immutable source documents", "rationale": "User preference for speed + Thai tax law compliance", "phase": "06"},
+    {"decision": "Partial payments with auto-paid detection", "rationale": "Sum receipts ≥ invoice total → mark paid", "phase": "06"},
+    {"decision": "Bank presets for KBank/SCB/BBL with flexible column mapping", "rationale": "Thai bank CSV formats vary — presets are best-guess, UI is safety net", "phase": "07"},
+    {"decision": "BANK_PRESETS extracted to bank-constants.ts", "rationale": "@fast-csv/parse requires Node.js fs — cannot be in client components", "phase": "07"}
+  ],
+  "uncommitted_files": [],
+  "next_action": "Run /gsd:new-milestone to start v2.0 planning — e-Tax Invoice, multi-user, PND1, LINE notifications, or cloud SaaS",
+  "context_notes": "Both v1.0 and v1.1 completed in a single marathon session. Total: 300 commits, 43,300+ LOC TypeScript, 8 phases, 30 plans. BanChee is a fully functional Thai SME accounting tool with AI receipt scanning, tax compliance, document workflow, and bank reconciliation. GitHub repo renamed to mingrath/banchee."
+}
