@@ -75,7 +75,13 @@ Plans:
   3. System suggests matches between bank entries and BanChee transactions using amount, date proximity, and description similarity scoring
   4. User can review matched pairs side-by-side, confirm or reject each match, and manually match unmatched entries
   5. Unmatched bank entries can create new transactions directly from the reconciliation view
-**Plans**: TBD
+**Plans:** 4 plans
+
+Plans:
+- [ ] 07-01-PLAN.md — Prisma schema + bank statement parser + matching algorithm (TDD)
+- [ ] 07-02-PLAN.md — Model layer + Zod schemas + server actions + app manifest
+- [ ] 07-03-PLAN.md — Import UI: file upload, bank presets, column mapping
+- [ ] 07-04-PLAN.md — Review UI: statement list, match review table, progress tracking + visual verification
 
 ### Phase 8: Ship-Ready Polish
 **Goal**: BanChee is presentable to the public -- README tells the story, Docker build works end-to-end, and real Thai receipt workflows render correctly
@@ -97,8 +103,8 @@ Plans:
 | 4. Export + Interoperability | v1.0 | 2/2 | Complete | 2026-03-24 |
 | 5. Document Model + Quotation System | v1.1 | 0/4 | Planning complete | - |
 | 6. Document Workflow Chain + Conversions | v1.1 | 0/5 | Planning complete | - |
-| 7. Bank Reconciliation | v1.1 | 0/0 | Not started | - |
+| 7. Bank Reconciliation | v1.1 | 0/4 | Planning complete | - |
 | 8. Ship-Ready Polish | v1.1 | 0/0 | Not started | - |
 
 ---
-*Last updated: 2026-03-26 after Phase 6 planning complete*
+*Last updated: 2026-03-26 after Phase 7 planning complete*
